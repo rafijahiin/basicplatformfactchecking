@@ -1,0 +1,1704 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>সত্যান্বেষক | Shottanneshok — Youth Fact-Check Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <style>
+    :root {
+      /* Professional Slate & Blue Palette */
+      --primary: #2563EB;      /* Blue 600 */
+      --primary-mid: #1D4ED8;  /* Blue 700 */
+      --primary-dark: #1E293B; /* Slate 800 */
+      --primary-light: #DBEAFE;/* Blue 100 */
+      --primary-pale: #EFF6FF; /* Blue 50 */
+      
+      --accent: #D97706;       /* Amber 600 */
+      --accent-dark: #B45309;  /* Amber 700 */
+      --accent-light: #FEF3C7; /* Amber 100 */
+      
+      --bg-color: #F8FAFC;     /* Slate 50 */
+      --bg-alt: #F1F5F9;       /* Slate 100 */
+      --dark: #0F172A;         /* Slate 900 */
+      --mid: #475569;          /* Slate 600 */
+      --light: #64748B;        /* Slate 500 */
+      --border: #E2E8F0;       /* Slate 200 */
+      --white: #FFFFFF;
+      
+      --green: #059669; --green-light: #D1FAE5;
+      --red: #DC2626; --red-light: #FEE2E2;
+      --yellow: #D97706; --yellow-light: #FEF3C7;
+      --purple: #7C3AED; --purple-light: #EDE9FE;
+    }
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', 'Hind Siliguri', sans-serif;
+      background: var(--bg-color);
+      color: var(--dark);
+      min-height: 100vh;
+      font-size: 15px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    .font-en { font-family: 'Inter', sans-serif; letter-spacing: -0.02em; }
+    .font-mono { font-family: 'Roboto Mono', monospace; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-alt); }
+    ::-webkit-scrollbar-thumb { background: var(--light); border-radius: 3px; }
+    
+    /* NAVBAR */
+    .navbar { position: sticky; top: 0; z-index: 100; background: var(--primary-dark); border-bottom: 3px solid var(--primary); padding: 0 16px; display: flex; align-items: center; justify-content: space-between; height: 56px; gap: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .navbar-brand { display: flex; align-items: center; gap: 10px; cursor: pointer; flex-shrink: 0; }
+    .navbar-logo { width: 32px; height: 32px; background: var(--primary); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; color: white; font-family: 'Hind Siliguri', sans-serif; }
+    .navbar-title { color: white; font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 700; line-height: 1.1; letter-spacing: -0.01em; }
+    .navbar-subtitle { color: var(--light); font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; }
+    .navbar-nav { display: flex; gap: 4px; overflow-x: auto; padding-bottom: 2px; flex: 1; justify-content: center; }
+    .navbar-nav::-webkit-scrollbar { height: 0; }
+    .nav-btn { padding: 6px 12px; border: none; background: transparent; color: #94A3B8; cursor: pointer; border-radius: 6px; font-size: 13px; font-weight: 500; font-family: 'Hind Siliguri', sans-serif; white-space: nowrap; transition: all 0.2s; }
+    .nav-btn:hover, .nav-btn.active { background: rgba(255,255,255,0.1); color: white; }
+    .lang-btn { padding: 4px 10px; border: 1px solid rgba(255,255,255,0.2); background: transparent; color: white; cursor: pointer; border-radius: 16px; font-size: 11px; font-family: 'Roboto Mono', monospace; flex-shrink: 0; transition: border-color 0.2s; }
+    .lang-btn:hover { border-color: white; }
+    
+    /* XP BAR */
+    .xp-bar-wrap { background: white; border-bottom: 1px solid var(--border); padding: 8px 16px; display: flex; align-items: center; gap: 12px; font-size: 12px; color: var(--mid); box-shadow: 0 1px 2px rgba(0,0,0,0.02); }
+    .xp-bar-track { flex: 1; height: 6px; background: var(--bg-alt); border-radius: 3px; overflow: hidden; }
+    .xp-bar-fill { height: 100%; background: var(--primary); border-radius: 3px; transition: width 0.5s ease; }
+    .xp-level-badge { background: var(--primary-pale); color: var(--primary-mid); padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; font-family: 'Roboto Mono', monospace; white-space: nowrap; border: 1px solid var(--primary-light); }
+
+    /* PAGE */
+    .page { min-height: calc(100vh - 94px); animation: fadeIn 0.2s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* SECTION */
+    .section { padding: 48px 20px; }
+    .section-tag { font-family: 'Roboto Mono', monospace; font-size: 11px; color: var(--primary); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+    .section-title { font-family: 'Inter', sans-serif; font-size: 24px; font-weight: 700; line-height: 1.25; margin-bottom: 12px; letter-spacing: -0.02em; color: var(--dark); }
+    .section-sub { font-size: 15px; color: var(--mid); margin-bottom: 32px; }
+
+    /* BUTTONS */
+    .btn-primary { display: inline-flex; align-items: center; gap: 8px; padding: 10px 24px; background: var(--primary); color: white; border: 1px solid transparent; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Inter', 'Hind Siliguri', sans-serif; transition: all 0.15s; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+    .btn-primary:hover { background: var(--primary-mid); box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2); }
+    .btn-teal { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; background: var(--primary-dark); color: white; border: none; border-radius: 6px; font-size: 14px; font-weight: 500; cursor: pointer; font-family: 'Inter', 'Hind Siliguri', sans-serif; transition: all 0.15s; }
+    .btn-teal:hover { background: #0F172A; }
+    .btn-outline { display: inline-flex; align-items: center; gap: 6px; padding: 9px 20px; background: white; color: var(--dark); border: 1px solid var(--border); border-radius: 6px; font-size: 14px; font-weight: 500; cursor: pointer; font-family: 'Inter', 'Hind Siliguri', sans-serif; transition: all 0.15s; box-shadow: 0 1px 2px rgba(0,0,0,0.02); }
+    .btn-outline:hover { background: var(--bg-color); border-color: var(--light); }
+    .btn-purple { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; background: var(--purple); color: white; border: none; border-radius: 6px; font-size: 14px; font-weight: 500; cursor: pointer; font-family: 'Inter', 'Hind Siliguri', sans-serif; transition: all 0.15s; }
+    .btn-purple:hover { background: #6D28D9; }
+
+    /* CARDS */
+    .card, .post-card, .module-card, .score-card, .unit-card, .sheep-step, .ai-result, .cert, .myth-card { 
+      background: white; border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02); transition: box-shadow 0.2s, border-color 0.2s; 
+    }
+    .card { padding: 24px; }
+    .card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+
+    /* GAME */
+    .game-header { background: white; border-bottom: 1px solid var(--border); padding: 20px 20px 16px; }
+    .game-header-title { font-family: 'Inter', sans-serif; font-size: 20px; font-weight: 700; color: var(--dark); letter-spacing: -0.01em; }
+    .game-header-sub { color: var(--mid); font-size: 13px; margin-top: 4px; }
+    .game-progress-bar-wrap { margin-top: 14px; height: 4px; background: var(--bg-alt); border-radius: 2px; overflow: hidden; }
+    .game-progress-bar-fill { height: 100%; background: var(--primary); border-radius: 2px; transition: width 0.4s; }
+    .game-counter { font-family: 'Roboto Mono', monospace; font-size: 11px; color: var(--light); margin-top: 8px; font-weight: 500; }
+    .game-body { max-width: 640px; margin: 0 auto; padding: 24px 16px; }
+    
+    /* POST CARD */
+    .post-card { overflow: hidden; margin-bottom: 24px; }
+    .post-card-header { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--bg-alt); background: #FAFAFA; }
+    .post-avatar { width: 38px; height: 38px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .post-account { font-weight: 600; font-size: 14px; color: var(--dark); }
+    .post-platform { font-size: 12px; color: var(--mid); }
+    .post-body { padding: 16px; }
+    .post-content { font-size: 15px; line-height: 1.6; margin-bottom: 12px; color: var(--dark); }
+    .post-engagement { font-size: 12px; color: var(--light); font-family: 'Roboto Mono', monospace; }
+    .post-warning { background: var(--bg-color); border-left: 3px solid var(--accent); border-radius: 0 4px 4px 0; padding: 10px 12px; margin-top: 12px; font-size: 13px; display: flex; gap: 8px; align-items: flex-start; color: var(--mid); border-top: 1px solid var(--border); border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    
+    /* VERDICT */
+    .verdict-reveal { border-radius: 8px; padding: 16px; margin-bottom: 20px; animation: fadeIn 0.2s ease; }
+    .verdict-reveal.fake { background: #FEF2F2; border: 1px solid #FECACA; }
+    .verdict-reveal.real { background: #F0FDF4; border: 1px solid #BBF7D0; }
+    .verdict-badge { display: inline-block; padding: 4px 12px; border-radius: 16px; font-weight: 700; font-size: 12px; margin-bottom: 8px; }
+    .verdict-badge.fake { background: var(--red); color: white; }
+    .verdict-badge.real { background: var(--green); color: white; }
+    .verdict-title { font-size: 15px; font-weight: 600; margin-bottom: 6px; color: var(--dark); }
+    .verdict-text { font-size: 14px; color: var(--mid); line-height: 1.6; }
+    
+    /* GAME BUTTONS */
+    .game-action-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+    .btn-real { padding: 12px; background: white; color: #15803D; border: 1px solid #BBF7D0; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Inter', 'Hind Siliguri', sans-serif; transition: all 0.15s; box-shadow: 0 1px 2px rgba(0,0,0,0.02); }
+    .btn-real:hover:not(:disabled) { background: #F0FDF4; border-color: #22C55E; }
+    .btn-fake { padding: 12px; background: white; color: #B91C1C; border: 1px solid #FECACA; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Inter', 'Hind Siliguri', sans-serif; transition: all 0.15s; box-shadow: 0 1px 2px rgba(0,0,0,0.02); }
+    .btn-fake:hover:not(:disabled) { background: #FEF2F2; border-color: #EF4444; }
+    .btn-real:disabled, .btn-fake:disabled { opacity: 0.5; cursor: not-allowed; background: var(--bg-alt); color: var(--light); border-color: var(--border); }
+    .btn-next { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Inter', 'Hind Siliguri', sans-serif; transition: background 0.15s; margin-bottom: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+    .btn-next:hover { background: var(--primary-mid); }
+
+    /* SCORE CARD */
+    .score-card { padding: 32px 24px; text-align: center; margin-bottom: 20px; }
+    .score-big { font-family: 'Inter', sans-serif; font-size: 48px; font-weight: 800; color: var(--dark); line-height: 1; letter-spacing: -0.02em; }
+
+    /* MODULE */
+    .module-wrap { max-width: 640px; margin: 0 auto; padding: 24px 16px; }
+    .module-header-strip { background: var(--bg-color); border-bottom: 1px solid var(--border); color: var(--mid); padding: 10px 20px; font-size: 11px; font-weight: 500; font-family: 'Roboto Mono', monospace; letter-spacing: 0.5px; }
+    .module-card { padding: 24px; margin-bottom: 20px; }
+    .module-section-tag { font-family: 'Roboto Mono', monospace; font-size: 10px; color: var(--primary); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
+    .module-title { font-family: 'Inter', sans-serif; font-size: 20px; font-weight: 700; margin-bottom: 16px; color: var(--dark); letter-spacing: -0.01em; }
+    .module-body { font-size: 15px; line-height: 1.7; color: var(--mid); }
+    .module-body p { margin-bottom: 16px; }
+    .highlight-box { background: var(--bg-color); border: 1px solid var(--border); border-radius: 6px; padding: 16px; margin: 20px 0; border-left: 3px solid var(--primary); }
+    .highlight-box-title { font-weight: 600; font-size: 14px; color: var(--dark); margin-bottom: 10px; }
+    .checklist { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .checklist li { display: flex; gap: 8px; font-size: 14px; line-height: 1.5; }
+    .check-icon { flex-shrink: 0; color: var(--primary); font-weight: bold; }
+    
+    /* QUIZ */
+    .quiz-q-num { font-family: 'Roboto Mono', monospace; font-size: 11px; color: var(--light); font-weight: 500; margin-bottom: 8px; }
+    .quiz-question { font-size: 16px; font-weight: 600; margin-bottom: 20px; line-height: 1.5; color: var(--dark); }
+    .quiz-options { display: flex; flex-direction: column; gap: 8px; }
+    .quiz-option { padding: 12px 16px; background: white; border: 1px solid var(--border); border-radius: 6px; text-align: left; cursor: pointer; font-size: 14px; font-family: 'Inter', 'Hind Siliguri', sans-serif; transition: all 0.15s; line-height: 1.5; color: var(--mid); }
+    .quiz-option:hover:not(:disabled) { border-color: var(--primary); background: var(--bg-color); color: var(--dark); }
+    .quiz-option:disabled { cursor: default; }
+    .quiz-option.correct { border-color: #22C55E; background: #F0FDF4; color: #15803D; font-weight: 500; }
+    .quiz-option.wrong { border-color: #EF4444; background: #FEF2F2; color: #B91C1C; }
+    .quiz-feedback { padding: 12px 16px; border-radius: 6px; font-size: 13px; line-height: 1.6; margin-top: 16px; }
+    .quiz-feedback.correct { background: #F0FDF4; color: #15803D; border: 1px solid #BBF7D0; }
+    .quiz-feedback.wrong { background: #FEF2F2; color: #B91C1C; border: 1px solid #FECACA; }
+
+    /* MIL UNITS */
+    .unit-card { padding: 20px; margin-bottom: 16px; cursor: pointer; }
+    .unit-card:hover { border-color: var(--primary-light); background: #FAFAFA; box-shadow: 0 4px 6px rgba(0,0,0,0.03); transform: translateY(-1px); }
+    .unit-card.completed { border-left: 4px solid var(--green); }
+    .unit-card.active { border-color: var(--primary); background: var(--primary-pale); }
+    .unit-icon { font-size: 24px; margin-bottom: 8px; background: var(--bg-color); width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 6px; border: 1px solid var(--border); }
+    .unit-num { font-family: 'Roboto Mono', monospace; font-size: 10px; color: var(--light); letter-spacing: 1px; margin-bottom: 6px; font-weight: 500; }
+    .unit-title { font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 700; margin-bottom: 6px; color: var(--dark); }
+    .unit-status { font-size: 12px; font-weight: 600; margin-top: 10px; }
+    .unit-status.done { color: var(--green); }
+    .unit-status.todo { color: var(--primary); }
+
+    /* SHEEP */
+    .sheep-step { padding: 20px; margin-bottom: 16px; border: 1px solid var(--border); }
+    .sheep-step.active { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary); }
+    .sheep-letter { font-family: 'Inter', sans-serif; font-size: 20px; font-weight: 800; width: 40px; height: 40px; border-radius: 6px; display: flex; align-items: center; justify-content: center; }
+
+    /* MYTHS */
+    .myth-card { margin-bottom: 12px; }
+    .myth-header { padding: 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; background: white; transition: background 0.15s; border-radius: 8px; }
+    .myth-header:hover { background: #FAFAFA; }
+    .myth-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 600; background: var(--bg-alt); color: var(--mid); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .myth-q { font-size: 14px; font-weight: 500; color: var(--dark); line-height: 1.5; }
+    .myth-chevron { color: var(--light); font-size: 18px; transition: transform 0.2s; }
+    .myth-chevron.open { transform: rotate(180deg); }
+    .myth-body { padding: 0 16px 16px; border-top: 1px solid var(--border); background: #FAFAFA; border-radius: 0 0 8px 8px; }
+    .myth-fact { font-size: 14px; color: var(--dark); line-height: 1.6; margin-top: 8px; }
+    .myth-source { font-size: 11px; font-family: 'Roboto Mono', monospace; color: var(--light); margin-top: 12px; }
+
+    /* TOAST & XP */
+    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--dark); color: white; padding: 10px 20px; border-radius: 6px; font-size: 13px; font-weight: 500; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.15); animation: fadeIn 0.2s ease; border: 1px solid #334155; }
+    .xp-popup { position: fixed; bottom: 70px; right: 20px; background: var(--accent); color: white; padding: 8px 16px; border-radius: 16px; font-weight: 600; font-size: 13px; z-index: 999; animation: xpPop 2s ease forwards; box-shadow: 0 2px 8px rgba(217,119,6,0.3); }
+    @keyframes xpPop { 0% { opacity: 0; transform: translateY(10px); } 15% { opacity: 1; transform: translateY(0); } 80% { opacity: 1; } 100% { opacity: 0; transform: translateY(-20px); } }
+
+    /* RUMOR FACTORY DARK MODE */
+    .rf-page { background: #0F172A; color: #F8FAFC; min-height: calc(100vh - 56px); font-family: 'Inter', 'Hind Siliguri', sans-serif; }
+    .rf-header { background: #1E293B; border-bottom: 1px solid #334155; padding: 16px 20px; }
+    .rf-title { font-size: 18px; font-weight: 700; color: #F8FAFC; letter-spacing: -0.01em; }
+    .rf-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 16px 0; }
+    .rf-stat { background: #1E293B; border: 1px solid #334155; border-radius: 6px; padding: 12px; text-align: center; }
+    .rf-stat-val { font-size: 20px; font-weight: 700; color: var(--accent); }
+    .rf-stat-label { font-size: 11px; color: #94A3B8; margin-top: 4px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+    .rf-mentor { background: #1E293B; border-left: 3px solid var(--primary); border-radius: 0 6px 6px 0; padding: 14px 16px; margin: 16px 0; font-size: 14px; line-height: 1.6; color: #E2E8F0; border-top: 1px solid #334155; border-right: 1px solid #334155; border-bottom: 1px solid #334155; }
+    .rf-choices { display: flex; flex-direction: column; gap: 10px; margin: 20px 0; }
+    .rf-choice { padding: 14px 16px; background: #1E293B; border: 1px solid #334155; border-radius: 6px; text-align: left; cursor: pointer; font-size: 14px; color: #F8FAFC; transition: all 0.15s; line-height: 1.5; }
+    .rf-choice:hover { border-color: var(--primary); background: #0F172A; }
+    .rf-feedback { background: #1E293B; border: 1px solid #334155; border-radius: 6px; padding: 16px; margin: 16px 0; font-size: 14px; line-height: 1.6; color: #E2E8F0; }
+    .rf-badge { display: inline-flex; align-items: center; gap: 6px; background: #334155; color: white; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; margin-bottom: 8px; border: 1px solid #475569; }
+    .rf-feed { max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; margin: 16px 0; }
+    .rf-feed-post { background: white; color: #0F172A; border-radius: 6px; padding: 14px; border-left: 3px solid var(--accent); font-size: 13px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+    .rf-debrief { background: #1E293B; border: 1px solid #22C55E; border-radius: 8px; padding: 24px; margin: 16px 0; }
+    .rf-debrief-title { font-size: 18px; font-weight: 700; color: #4ADE80; margin-bottom: 12px; }
+
+    /* AI CHECKER */
+    .ai-result { padding: 24px; margin-top: 20px; }
+    .verdict-pill { display: inline-block; padding: 4px 12px; border-radius: 16px; font-weight: 600; font-size: 13px; margin-bottom: 12px; }
+    .verdict-true { background: #F0FDF4; color: #15803D; border: 1px solid #BBF7D0; }
+    .verdict-false { background: #FEF2F2; color: #B91C1C; border: 1px solid #FECACA; }
+    .verdict-misleading { background: #FFFBEB; color: #B45309; border: 1px solid #FDE68A; }
+    .verdict-partial { background: #EFF6FF; color: #1D4ED8; border: 1px solid #BFDBFE; }
+    .verdict-unknown { background: var(--bg-alt); color: var(--mid); border: 1px solid var(--border); }
+
+    /* CERTIFICATE */
+    .cert { background: white; border: 1px solid var(--border); border-top: 6px solid var(--primary); border-radius: 8px; padding: 40px 32px; text-align: center; max-width: 600px; margin: 0 auto; position: relative; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+    .cert-logo { font-size: 32px; margin-bottom: 12px; }
+    .cert-org { font-size: 11px; font-family: 'Roboto Mono', monospace; color: var(--mid); letter-spacing: 1px; margin-bottom: 6px; font-weight: 500; }
+    .cert-title { font-family: 'Inter', sans-serif; font-size: 22px; font-weight: 800; color: var(--dark); margin-bottom: 4px; letter-spacing: -0.02em; }
+    .cert-subtitle { font-size: 14px; color: var(--light); margin-bottom: 24px; }
+    .cert-name { font-family: 'Inter', sans-serif; font-size: 28px; font-weight: 700; color: var(--primary); margin: 16px 0; letter-spacing: -0.01em; }
+    .cert-desc { font-size: 14px; color: var(--mid); line-height: 1.6; margin-bottom: 20px; }
+    .cert-seal { display: inline-flex; align-items: center; gap: 6px; padding: 6px 16px; background: var(--bg-alt); color: var(--dark); border: 1px solid var(--border); border-radius: 16px; font-size: 12px; font-weight: 600; }
+
+    @media(max-width:640px){
+      .section { padding: 32px 16px; }
+      .section-title { font-size: 20px; }
+      .game-action-buttons { gap: 8px; }
+      .card-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useRef } = React;
+
+// ===== XP LEVELS =====
+const LEVELS = [
+  {min:0,max:49,title:'শিক্ষার্থী',titleEn:'Student',icon:'📖'},
+  {min:50,max:149,title:'অনুসন্ধানী',titleEn:'Investigator',icon:'🔍'},
+  {min:150,max:299,title:'সত্য রক্ষক',titleEn:'Truth Defender',icon:'🛡️'},
+  {min:300,max:499,title:'শান্তিনির্মাতা',titleEn:'Peacebuilder',icon:'🕊️'},
+  {min:500,max:Infinity,title:'MIL মাস্টার',titleEn:'MIL Master',icon:'🏆'},
+];
+function getLevel(xp){return LEVELS.find(l=>xp>=l.min&&xp<=l.max)||LEVELS[0]}
+function getLevelPct(xp){const l=getLevel(xp);const range=l.max===Infinity?200:l.max-l.min;return Math.min(100,Math.round(((xp-l.min)/range)*100))}
+
+// ===== GAME DATA =====
+const GAME_POSTS = [
+  {id:1,verdict:"fake",platform:"Facebook",account:"Bangladesh Breaking News 🔴",avatar:"📢",avatarBg:"#FEE2E2",
+   content:"ব্রেকিং: ভারত বাংলাদেশের সাথে সমস্ত বাণিজ্য বন্ধ করে দিয়েছে! সরকার আড়াল করছে সত্যটা! এখনই শেয়ার করুন!! 🚨🚨🚨",
+   contentEn:"BREAKING: India has completely blocked ALL trade with Bangladesh! Government hiding the truth! Share NOW!! 🚨🚨🚨",
+   engagement:"৪৫,৩২১ শেয়ার • ১২,৮৭৬ লাইক",engagementEn:"45,321 shares • 12,876 likes",
+   explanation:"মিথ্যা। FactWatch (মে ২০২৬) যাচাই করেছে — ভারত-বাংলাদেশ বাণিজ্য স্বাভাবিক। ছবিটি ২০২১ সালের ভারত-পাকিস্তান সীমান্ত বিরোধ থেকে নেওয়া।",
+   explanationEn:"FALSE. FactWatch (May 2026) verified — India-Bangladesh trade is normal. The image was misattributed from a 2021 India-Pakistan border dispute.",
+   warning:"All-caps, no source cited, emotional urgency, excessive sharing pressure"},
+  {id:2,verdict:"real",platform:"The Daily Star",account:"The Daily Star BD ✓",avatar:"📰",avatarBg:"#D1FAE5",
+   content:"Bangladesh wins 2 gold medals at South Asian Indoor Athletics Championships 2026 in Colombo. Ministry of Sports confirms achievement.",
+   contentEn:"Bangladesh wins 2 gold medals at South Asian Indoor Athletics Championships 2026 in Colombo.",
+   engagement:"২,৩৪৫ শেয়ার",engagementEn:"2,345 shares",
+   explanation:"সত্য। The Daily Star যাচাইকৃত সংবাদমাধ্যম। Ministry of Sports ও Asian Athletics নিশ্চিত করেছে।",
+   explanationEn:"TRUE. Verified news outlet. Confirmed via Ministry of Sports press release and Asian Athletics official website.",warning:null},
+  {id:3,verdict:"fake",platform:"WhatsApp Forward",account:"WhatsApp Forward (উৎস অজানা)",avatar:"📱",avatarBg:"#FEE2E2",
+   content:"এইমাত্র পাওয়া: সাবেক প্রধানমন্ত্রীকে জেনেভায় দেখা গেছে, এটা সত্যি ছবি! সরকার লুকাচ্ছে!",
+   contentEn:"JUST IN: Former PM spotted in Geneva — this image is real! Government hiding everything! Forward to everyone!",
+   engagement:"৯৮,০০০+ শেয়ার",engagementEn:"98,000+ shares",
+   explanation:"মিথ্যা। Rumor Scanner AI ডিটেকশনে নিশ্চিত — AI-জেনারেটেড। জেনেভায় কোনো সম্মেলন হয়নি।",
+   explanationEn:"FALSE. Rumor Scanner confirmed via AI image detection — image is AI-generated. No such Geneva conference occurred.",
+   warning:"Conspiracy framing, no named source, WhatsApp viral pressure"},
+  {id:4,verdict:"fake",platform:"Facebook",account:"BD Alert News 🔴 (অযাচাইকৃত)",avatar:"⚠️",avatarBg:"#FEE2E2",
+   content:"সরকার জরুরি অবস্থা জারি করে সব বিরোধী দল নিষিদ্ধ করেছে! পরিবারকে এখনই সতর্ক করুন!",
+   contentEn:"Government declared emergency and banned ALL opposition parties! Warn your family RIGHT NOW!",
+   engagement:"১,২৩,৪৫৬ শেয়ার",engagementEn:"1,23,456 shares",
+   explanation:"মিথ্যা। Rumor Scanner: কোনো জরুরি অবস্থা ঘোষণা হয়নি। রাষ্ট্রপতির কার্যালয় ও আইন মন্ত্রণালয় উভয়ই প্রত্যাখ্যান করেছে।",
+   explanationEn:"FALSE. Rumor Scanner: No emergency declared. Both the President's Office and Ministry of Law denied it.",
+   warning:"Family urgency framing, unverified account, no official source"},
+  {id:5,verdict:"real",platform:"BRAC Institute",account:"BRAC Institute of Educational Development ✓",avatar:"🔬",avatarBg:"#D1FAE5",
+   content:"নতুন গবেষণা: ১৮-২৫ বছর বয়সী ৬৭% বাংলাদেশি তরুণ AI-তৈরি ছবি সনাক্ত করতে পারেন না। নমুনা: ২,৪০০। মার্চ ২০২৬।",
+   contentEn:"New research: 67% of Bangladeshi youth aged 18–25 cannot identify AI-generated images. Sample: 2,400. March 2026.",
+   engagement:"১৫,৬৭৮ শেয়ার",engagementEn:"15,678 shares",
+   explanation:"সত্য। BRAC বিশ্বস্ত উন্নয়ন প্রতিষ্ঠান। সুনির্দিষ্ট নমুনা, তারিখ ও উৎস লিঙ্ক — সত্যিকার গবেষণার চিহ্ন।",
+   explanationEn:"TRUE. BRAC is trusted. Specific sample size, date, and source URL — hallmarks of genuine research.",warning:null},
+  {id:6,verdict:"fake",platform:"Facebook Group",account:"Health Tips BD 🌿",avatar:"💊",avatarBg:"#FEE2E2",
+   content:"ডেঙ্গু থেকে বাঁচতে প্রতিদিন পেঁপের পাতার রস এবং প্যারাসিটামল একসাথে খান! বড় ডাক্তাররা এই সত্য গোপন রাখছেন!",
+   contentEn:"Drink papaya leaf juice with paracetamol daily to cure Dengue! Top doctors are hiding this! Share to save lives!",
+   engagement:"৬৭,০০০ শেয়ার",engagementEn:"67,000 shares",
+   explanation:"মিথ্যা ও বিপজ্জনক। WHO নিশ্চিত: পেঁপের পাতা ডেঙ্গুর বৈজ্ঞানিক চিকিৎসা নয়। অতিরিক্ত প্যারাসিটামল লিভার ক্ষতি করে।",
+   explanationEn:"FALSE & DANGEROUS. WHO confirms papaya leaf is not a scientific cure for Dengue, and overdosing on paracetamol causes severe liver damage.",
+   warning:"Miracle cure claims, anti-establishment framing, dangerous medical advice"},
+  {id:7,verdict:"real",platform:"Official App",account:"BMD Official Alert ✓",avatar:"⛈️",avatarBg:"#D1FAE5",
+   content:"ঘূর্ণিঝড়ের প্রভাবে চট্টগ্রাম ও কক্সবাজার সমুদ্রবন্দরকে ৮ নম্বর মহাবিপদ সংকেত। উপকূলীয় বাসিন্দাদের আশ্রয়কেন্দ্রে যাওয়ার নির্দেশ।",
+   contentEn:"Cyclone alert: Chattogram and Cox's Bazar ports to hoist Great Danger Signal No 8. Coastal residents to move to shelters immediately.",
+   engagement:"অফিসিয়াল নোটিশ",engagementEn:"Official Notice",
+   explanation:"সত্য। BMD অফিসিয়াল ওয়েবসাইট ও মোবাইল অ্যাপে সতর্কতা জারি। সব মূলধারার মিডিয়া সম্প্রচার করছে।",
+   explanationEn:"TRUE. BMD issued this on their official website and app. All mainstream outlets are broadcasting it.",warning:null},
+  {id:8,verdict:"fake",platform:"WhatsApp/Messenger",account:"Promo Link 🎁",avatar:"🔗",avatarBg:"#FEE2E2",
+   content:"পদ্মা সেতু পারাপারে নতুন নিয়ম: বাইক সম্পূর্ণ ফ্রি! এই লিঙ্কে ক্লিক করে ফ্রি টোল পাস নিন: http://padmabridge-free-pass.xyz",
+   contentEn:"New rule: Bikes are now completely FREE on Padma Bridge! Click to register your free toll pass: http://padmabridge-free-pass.xyz",
+   engagement:"অজানা ফরোয়ার্ড",engagementEn:"Unknown Forwards",
+   explanation:"মিথ্যা। ফিশিং স্ক্যাম। FactWatch: সেতু কর্তৃপক্ষ এমন ঘোষণা দেয়নি। লিঙ্কটি আপনার তথ্য চুরির নকল ওয়েবসাইট।",
+   explanationEn:"FALSE. Phishing scam. FactWatch: Bridge Authority made no such announcement. The link is a fake website to steal your data.",
+   warning:"Too good to be true, suspicious URL (.xyz), prompts immediate data entry"},
+];
+
+// ===== GAME SCENARIOS (Rumor Factory) =====
+const GAME_SCENARIOS = [
+  {id:"impersonation",
+   mentorBn:"গুজব কারখানায় স্বাগতম! ইন্টারনেট শাসন করতে প্রথমে একটি ছদ্মবেশ দরকার। একটি নিউজ পোর্টালের নাম বেছে নিন।",
+   mentorEn:"Welcome to the Troll Factory! To rule the internet, you need a disguise. Pick a news portal name.",
+   choices:[
+     {textBn:"@AngryTroll_BD",textEn:"@AngryTroll_BD",followers:-50,credibility:-10,badge:null,
+      feedbackBn:"ভুল! কেউ বেনামী ট্রলকে বিশ্বাস করে না।",feedbackEn:"Wrong! Nobody trusts an anonymous troll.",postBn:null,postEn:null},
+     {textBn:"@ProthomBarta24 (অফিশিয়াল লোগো চুরি করে)",textEn:"@ProthomBarta24 (With stolen official logo)",followers:500,credibility:20,
+      badge:{icon:'🎭',nameBn:'ছদ্মবেশ',nameEn:'Impersonation'},
+      feedbackBn:"দারুণ! Impersonation — মানুষ লোগো দেখেই শেয়ার করবে, নাম চেক করবে না।",
+      feedbackEn:"Perfect! IMPERSONATION — people trust official logos and won't check the handle.",
+      postBn:"নতুন পোর্টাল চালু। আমরা সত্যের সন্ধানে।",postEn:"New portal launched. We are always in search of the truth."}
+   ]},
+  {id:"emotion",
+   mentorBn:"এখন ট্রাফিক দরকার। মানুষ রাগ বা ভয় পেলে বেশি শেয়ার করে। একটি শিরোনাম লিখুন:",
+   mentorEn:"Now we need traffic. People share more when angry or scared. Write a headline:",
+   choices:[
+     {textBn:"স্থানীয় বাজারে সাধারণ বিবাদ, পরিস্থিতি শান্ত।",textEn:"Minor dispute at local market resolved peacefully.",followers:-100,credibility:0,badge:null,
+      feedbackBn:"বিরক্তিকর! সত্য ভাইরাল হয় না।",feedbackEn:"Boring! Truth doesn't go viral.",postBn:null,postEn:null},
+     {textBn:"সতর্কতা! বাজারে ছেলেধরা ও ডাকাত দলের ভয়াবহ হামলা! শেয়ার করে সবাইকে সতর্ক করুন! 🚨",textEn:"ALERT! Hostile kidnapper gang launches brutal attack at market! SHARE to save lives! 🚨",
+      followers:1500,credibility:5,badge:{icon:'🔥',nameBn:'আবেগ',nameEn:'Emotion'},
+      feedbackBn:"মাস্টারপিস! EMOTION — ভয় যৌক্তিক চিন্তাকে বাধা দেয়। যাচাই না করেই শেয়ার।",
+      feedbackEn:"Masterpiece! EMOTION — Fear bypasses logical thinking. They hit share without checking.",
+      postBn:"সতর্কতা! বাজারে ছেলেধরা হামলা! শেয়ার করুন! 🚨",postEn:"ALERT! Kidnapper gang attacks market! SHARE to save lives! 🚨"}
+   ]},
+  {id:"conspiracy",
+   mentorBn:"ফলোয়ার বাড়ছে, কিন্তু এখন একটি 'বড় গল্প' দরকার। ডেঙ্গু মহামারী নিয়ে একটি থিওরি চালু করুন:",
+   mentorEn:"Followers are growing, but now you need a 'big story'. Launch a theory about the dengue epidemic:",
+   choices:[
+     {textBn:"সরকারি মশা নিধন কর্মসূচির তথ্য শেয়ার করুন।",textEn:"Share information about the government's mosquito control programme.",followers:-200,credibility:5,badge:null,
+      feedbackBn:"আবার? সত্য তথ্যে ক্লিক হয় না।",feedbackEn:"Again? Factual information gets zero clicks.",postBn:null,postEn:null},
+     {textBn:"ফাঁস! বিদেশি এনজিওরা মশা ছাড়ছে যাতে তারা আমাদের কাছে ডেঙ্গুর ভ্যাকসিন বিক্রি করতে পারে! জেগে ওঠো!",textEn:"EXPOSED: Foreign NGOs secretly releasing mosquitoes to sell expensive vaccines! Wake up Bangladesh!",
+      followers:5000,credibility:15,badge:{icon:'👁️',nameBn:'ষড়যন্ত্র',nameEn:'Conspiracy'},
+      feedbackBn:"Conspiracy theory — সহজ ভিলেন, সহজ ব্যাখ্যা। অ্যালগরিদম ভালোবাসে।",
+      feedbackEn:"CONSPIRACY — simple evil explanation for a chaotic world. Algorithms love it.",
+      postBn:"ফাঁস! বিদেশি এনজিওরা মশা ছাড়ছে! জেগে ওঠো বাংলাদেশ!",postEn:"EXPOSED: Foreign NGOs releasing mosquitoes! Wake up Bangladesh!"}
+   ]},
+  {id:"discredit",
+   mentorBn:"বিপদ! 'Rumor Scanner' প্রমাণ করেছে আপনার মশার খবর ভুয়া। কী করবেন?",
+   mentorEn:"Uh oh. A verified fact-checker just proved your mosquito story is fake. Respond quickly!",
+   choices:[
+     {textBn:"ভুলের জন্য ক্ষমা চাচ্ছি। পোস্টটি মুছে দেওয়া হয়েছে।",textEn:"We apologize for the error. The article has been deleted.",followers:-5000,credibility:-50,badge:null,
+      feedbackBn:"হার মেনেছেন? ট্রলরা কখনো ক্ষমা চায় না।",feedbackEn:"You surrendered? Trolls never apologize.",postBn:null,postEn:null},
+     {textBn:"এই তথাকথিত 'ফ্যাক্ট-চেকারদের' টাকা দেয় কে? বিদেশি দালাল! এদের কথায় কান দেবেন না!",textEn:"Who funds these 'Fact-Checkers'? They are paid foreign agents trying to silence the truth!",
+      followers:4000,credibility:30,badge:{icon:'🎯',nameBn:'মানহানি',nameEn:'Discredit'},
+      feedbackBn:"DISCREDIT — আক্রমণকারীকে আক্রমণ করুন। তাদের বদনাম করলে মিথ্যাই সত্য মনে হয়।",
+      feedbackEn:"DISCREDIT — Attack the attacker. Destroy their reputation and your lies survive.",
+      postBn:"'ফ্যাক্ট-চেকারদের' টাকা দেয় বিদেশি এনজিও!",postEn:"These 'Fact-Checkers' are funded by foreign agents!"}
+   ]},
+  {id:"trolling",
+   mentorBn:"একজন নারী সাংবাদিক আপনার পেজের সমালোচনা করছেন। তাকে কীভাবে চুপ করাবেন?",
+   mentorEn:"A prominent female journalist is criticizing your page. Facts won't help. How do you silence her?",
+   choices:[
+     {textBn:"একটি বিস্তারিত প্রবন্ধ লিখে আমাদের অবস্থান ব্যাখ্যা করুন।",textEn:"Write a long, detailed counter-argument explaining your stance.",followers:-1000,credibility:0,badge:null,
+      feedbackBn:"কেউ পড়বে না। ফলোয়ারদের মনোযোগ গোল্ডফিশের মতো।",feedbackEn:"Nobody will read it. Your followers' attention span is microscopic.",postBn:null,postEn:null},
+     {textBn:"তার একটি কুৎসিত মিম তৈরি করুন এবং ব্যক্তিগত চরিত্র নিয়ে গুজব ছড়ান।",textEn:"Create an ugly meme of her face and spread rumors about her personal character.",
+      followers:12000,credibility:0,badge:{icon:'🤡',nameBn:'ট্রলিং',nameEn:'Trolling'},
+      feedbackBn:"TROLLING/Cyberbullying — বিরোধীদের মানসিকভাবে ক্লান্ত করে ভয়ে চুপ করিয়ে দেয়।",
+      feedbackEn:"TROLLING — Cyberbullying exhausts opponents until they log off in fear. This disproportionately silences women.",
+      postBn:"এই সাংবাদিকের আসল চেহারা দেখুন... [মিম সংযুক্ত]",postEn:"Look at the real face of this journalist... [Meme attached]"}
+   ]},
+];
+
+// ===== UNESCO MIL MODULE 4 DATA =====
+const MIL_UNITS = [
+  {id:1,icon:"💡",
+   titleBn:"ইউনিট ১: সত্যই গুরুত্বপূর্ণ",titleEn:"Unit 1: Truth Matters",
+   durationBn:"৩ ঘণ্টা",durationEn:"3 hours",xp:30,
+   conceptsBn:["সত্যের তত্ত্ব (প্রতিলিপি, সংযোগ ও সংগতি তত্ত্ব)","পোস্ট-ট্রুথ যুগ — সত্যের চেয়ে আবেগ বেশি","সাংবাদিকতায় সত্যের ভূমিকা","ঐতিহাসিক সংশোধনবাদ ও অস্বীকারবাদ"],
+   conceptsEn:["Theories of truth (correspondence, coherence, pragmatic)","Post-truth era — emotion over evidence","Truth as the essence of journalism and librarianship","Historical revisionism and denialism"],
+   contentBn:[
+     "সত্যের সন্ধান মানবজাতির চিরন্তন গল্প। Jonathan Swift (১৭শ শতক) বলেছিলেন: 'মিথ্যা উড়ে যায়, সত্য খুঁড়িয়ে আসে।' MIT Media Lab-এর ২০১৮ গবেষণা এটি প্রমাণ করে — Twitter-এ মিথ্যা তথ্য সত্যের চেয়ে ৬ গুণ দ্রুত ছড়ায়।",
+     "পোস্ট-ট্রুথ যুগে মানুষ প্রমাণের চেয়ে অনুভূতিকে বেশি গুরুত্ব দেয়। এটি কি সত্যিই নতুন? মানুষ সবসময় এমন তথ্য বিশ্বাস করতে চেয়েছে যা তাদের বিদ্যমান বিশ্বাসকে সমর্থন করে — এটিকে বলে confirmation bias।",
+     "সাংবাদিকতার মূল দায়িত্ব: তথ্য যাচাই করে সত্য প্রকাশ করা। 'যদি তথ্য মিথ্যা হয়, তবে সেটি সংবাদ নয়' — UNESCO। পেশাদার সংবাদমাধ্যম একাধিক সূত্র, উভয়পক্ষের বক্তব্য এবং তথ্য যাচাইয়ের মানদণ্ড মেনে চলে।"
+   ],
+   contentEn:[
+     "The search for truth is the story of mankind. Jonathan Swift wrote in the 17th century: 'Falsehood flies, and truth comes limping after it.' MIT Media Lab's 2018 study confirmed this — on Twitter, false information spreads 6x faster than truth in all categories.",
+     "In the post-truth era, people value emotion over evidence. Confirmation bias — the tendency to believe information that confirms our existing views — is not new, but digital platforms turbocharge it with algorithmic amplification.",
+     "The core responsibility of journalism is to verify facts and report truth. UNESCO discourages the term 'fake news' because if content is fake, it is not news. Professional journalism requires multiple sources, both-sides balance, and fact-verification standards."
+   ],
+   quiz:[
+     {q:"MIT (২০১৮) অনুযায়ী, মিথ্যা তথ্য সত্যের চেয়ে কত গুণ দ্রুত ছড়ায়?",qEn:"According to MIT (2018), how many times faster does false information spread than true information?",
+      options:["২ গুণ | 2x","৬ গুণ | 6x ✓","১০ গুণ | 10x","সমান | Same speed"],correct:1,
+      feedback:"সঠিক। MIT ২০১৮ গবেষণা (Science জার্নাল): মিথ্যা তথ্য সত্যের চেয়ে ৬ গুণ দ্রুত এবং আরও গভীরে ছড়ায়। Correct. MIT 2018 (Science journal): False news spreads 6x faster and reaches far more people than true news."},
+     {q:"'পোস্ট-ট্রুথ' মানে কী?",qEn:"What does 'post-truth' mean?",
+      options:["সত্য মৃত | Truth is dead","আবেগ প্রমাণের চেয়ে বেশি প্রভাবশালী | Emotion more influential than evidence ✓","মিথ্যা তথ্য নতুন | Misinformation is new","সামাজিক মাধ্যম মিথ্যা | Social media is false"],correct:1,
+      feedback:"পোস্ট-ট্রুথ মানে এমন একটি পরিবেশ যেখানে বস্তুনিষ্ঠ তথ্যের চেয়ে ব্যক্তিগত আবেগ ও বিশ্বাস জনমতকে বেশি প্রভাবিত করে। Post-truth describes a climate where appeals to emotion are more influential than facts."},
+     {q:"UNESCO কোন পরিভাষার বিরোধিতা করে?",qEn:"Which term does UNESCO discourage?",
+      options:["মিথ্যা তথ্য | Misinformation","কুতথ্য | Disinformation","ভুয়া খবর | Fake news ✓","অপতথ্য | Mal-information"],correct:2,
+      feedback:"UNESCO 'fake news' পরিভাষা প্রত্যাখ্যান করে কারণ: যদি তথ্য মিথ্যা হয়, তাহলে সেটি সংবাদই নয়। এই শব্দটি বৈধ সাংবাদিকতা দমনেও ব্যবহৃত হতে পারে। UNESCO rejects 'fake news' because if content is fake, it is not news, and the term can be weaponized against legitimate journalism."}
+   ]},
+  {id:2,icon:"🕸️",
+   titleBn:"ইউনিট ২: মিথ্যা তথ্যের বাস্তুতন্ত্র",titleEn:"Unit 2: The Misinformation Ecosystem",
+   durationBn:"২ ঘণ্টা",durationEn:"2 hours",xp:25,
+   conceptsBn:["মিথ্যা তথ্য, কুতথ্য ও অপতথ্যের পার্থক্য","৭টি সাধারণ বিভাগ (ভুল সংযোগ, মিথ্যা প্রেক্ষাপট...)","ষড়যন্ত্রতত্ত্ব ও মিথ্যা তথ্যের সম্পর্ক","ঘৃণ্য বক্তব্য ও মিথ্যা তথ্যের মিশ্রণ"],
+   conceptsEn:["Misinformation vs. Disinformation vs. Mal-information","7 common categories (misleading, impersonator, fabricated...)","Conspiracy theories and their relationship to false content","How hate speech and misinformation intersect"],
+   contentBn:[
+     "তিনটি মূল ধরন: ১) মিথ্যা তথ্য (Misinformation) — অসত্য, কিন্তু ইচ্ছাকৃত ক্ষতির উদ্দেশ্য নেই। ২) কুতথ্য (Disinformation) — সচেতনভাবে মিথ্যা, ক্ষতির উদ্দেশ্যে প্রচারিত। ৩) অপতথ্য (Mal-information) — সত্য কিন্তু ক্ষতির উদ্দেশ্যে ব্যবহৃত।",
+     "সাতটি সাধারণ বিভাগ: ভুল সংযোগ (headline ≠ content), ভুল প্রেক্ষাপট (সত্য তথ্য ভুল সময়ে), বিভ্রান্তিকর বিষয়বস্তু, ছদ্মবেশী বিষয়বস্তু, মিথ্যা বিষয়বস্তু, কারসাজি করা বিষয়বস্তু, তৈরি করা বিষয়বস্তু।",
+     "ঘৃণ্য বক্তব্য (hate speech) সবসময় মিথ্যা নয়। কিন্তু বিদ্বেষ প্রায়ই মিথ্যা তথ্য দিয়ে 'সুপারচার্জড' হয়। উদাহরণ: একটি সত্যিকার দুর্ঘটনাকে সাম্প্রদায়িক উত্তেজনা তৈরিতে ব্যবহার।"
+   ],
+   contentEn:[
+     "Three core types: 1) Misinformation — false, but not intended to harm. 2) Disinformation — deliberately false, created to harm. 3) Mal-information — true information used to cause harm. Understanding the difference matters because they require different responses.",
+     "Seven categories: false connection (headline ≠ content), false context (real content, wrong context), misleading content, impersonator content, fabricated content, manipulated content, satire/parody. Bangladesh context: most viral content is 'false context' — real images from 2021 reused for 2026 events.",
+     "Hate speech and misinformation are distinct but intersect. Anti-vaccination falsehoods rarely include direct hatred, but ethnic and religious tensions are often supercharged with false information. Rohingya-related disinformation in Bangladesh/Myanmar is a critical example."
+   ],
+   quiz:[
+     {q:"'কুতথ্য' (Disinformation)-এর বিশেষত্ব কী?",qEn:"What distinguishes 'Disinformation' specifically?",
+      options:["যেকোনো মিথ্যা তথ্য | Any false information","ইচ্ছাকৃতভাবে ক্ষতির উদ্দেশ্যে তৈরি | Deliberately created to cause harm ✓","শুধু সোশ্যাল মিডিয়ায় | Only on social media","ফটোশপ করা ছবি | Photoshopped images"],correct:1,
+      feedback:"কুতথ্যের মূল বৈশিষ্ট্য হলো ইচ্ছাকৃততা — কেউ জেনে-বুঝে মিথ্যা তথ্য প্রচার করছে ক্ষতির উদ্দেশ্যে। Disinformation requires intent to harm — someone knowingly creates and spreads false information."},
+     {q:"'ভুল সংযোগ' (False Connection) কী?",qEn:"What is 'False Connection'?",
+      options:["দুটি ভুল ঘটনা | Two false events","শিরোনাম ও মূল বিষয়বস্তু মেলে না | Headline doesn't match the article content ✓","মিথ্যা সূত্র | False sources","ভুল তারিখ | Wrong date"],correct:1,
+      feedback:"সবচেয়ে সাধারণ ক্লিকবেইট কৌশল: চমকপ্রদ শিরোনাম, কিন্তু আর্টিকেলের ভেতরে ভিন্ন বা বিপরীত তথ্য। False Connection is the clickbait tactic: sensational headline that doesn't match the actual article content."},
+     {q:"ঘৃণ্য বক্তব্য (hate speech) সম্পর্কে কোন কথাটি সত্য?",qEn:"Which is true about hate speech?",
+      options:["সবসময় মিথ্যা | Always false","সবসময় সত্য | Always true","মিথ্যা তথ্য থেকে আলাদা কিন্তু প্রায়ই একসাথে চলে | Distinct from misinformation but often combined ✓","শুধু অনলাইনে | Only online"],correct:2,
+      feedback:"ঘৃণ্য বক্তব্য সত্য বা মিথ্যা উভয়ই হতে পারে, কিন্তু বিদ্বেষ প্রায়ই মিথ্যা দিয়ে 'সুপারচার্জড' হয়। Hate speech can be true or false, but hostility is often amplified with false information."}
+   ]},
+  {id:3,icon:"📡",
+   titleBn:"ইউনিট ৩: মিডিয়া ও মিথ্যা তথ্য",titleEn:"Unit 3: Media and Misinformation",
+   durationBn:"২ ঘণ্টা",durationEn:"2 hours",xp:25,
+   conceptsBn:["সোশ্যাল মিডিয়া কেন মিথ্যা তথ্যের পছন্দের মাধ্যম","অ্যালগরিদম ও ইকো চেম্বার","ট্রোলিং ও ক্লিকবেইট কীভাবে কাজ করে","বট সনাক্ত করার উপায়"],
+   conceptsEn:["Why social media is the platform of choice for disinformation","Algorithms, echo chambers, and filter bubbles","How trolling and clickbait operate","How to spot bots and coordinated inauthentic behavior"],
+   contentBn:[
+     "সোশ্যাল মিডিয়া মিথ্যা তথ্যের আদর্শ মাধ্যম কেন: দ্রুত প্রচার, নিউজফিড অ্যালগরিদম আবেগপ্রবণ বিষয়বস্তু বেশি দেখায়, যাচাইয়ের সময় নেই, গ্রুপ পরিচিতি মিথ্যা তথ্যকে বিশ্বাসযোগ্য করে।",
+     "অ্যালগরিদম এবং 'ইনফর্মেশন ডায়েট': আপনি যা পছন্দ করেন তাই বেশি দেখান — ফলে একটি ইকো চেম্বার তৈরি হয় যেখানে শুধু আপনার বিদ্যমান বিশ্বাস নিশ্চিত হয়। এটি রাডিকালাইজেশনের পথ।",
+     "বট সনাক্তকরণ: অস্বাভাবিক দ্রুত পোস্টিং, কোনো ব্যক্তিগত তথ্য নেই, শুধু রাজনৈতিক বিষয়ে মন্তব্য, একই বার্তার পুনরাবৃত্তি, সংখ্যাসূচক ব্যবহারকারীনাম।"
+   ],
+   contentEn:[
+     "Social media becomes the platform of choice for disinformation because: content spreads instantly, algorithms prioritize emotional/outrageous content, there's no time for verification, and in-group identity makes people trust content from their community without checking.",
+     "The 'information diet' problem: Algorithms show you more of what you engage with, creating echo chambers where you only see content confirming your existing views. This is a pipeline to radicalization — each shared piece of outrage pulls you deeper into extremist content.",
+     "Spotting bots: unusually fast posting speed, no personal information, only posts about political topics, repetition of identical messages, numeric usernames, account age much younger than activity level. Bangladesh's 2026 electoral period saw significant coordinated inauthentic behavior."
+   ],
+   quiz:[
+     {q:"অ্যালগরিদম কোন ধরনের বিষয়বস্তু বেশি দেখায়?",qEn:"What type of content do social media algorithms prioritize?",
+      options:["সঠিক তথ্য | Accurate information","আবেগপ্রবণ ও উত্তেজক | Emotional and outrageous content ✓","দীর্ঘ লেখা | Long articles","সরকারি বিজ্ঞপ্তি | Government notices"],correct:1,
+      feedback:"অ্যালগরিদম 'engagement' সর্বাধিক করে — রাগ, ভয় ও বিস্ময় সবচেয়ে বেশি এনগেজমেন্ট পায়। এটি মিথ্যা তথ্যকে সুবিধা দেয়। Algorithms maximize engagement — anger, fear, and outrage generate the most engagement, which benefits false information."},
+     {q:"'ইকো চেম্বার' মানে কী?",qEn:"What is an 'echo chamber'?",
+      options:["শব্দের প্রতিধ্বনি | Sound echo","শুধু নিজের বিশ্বাস নিশ্চিত করা তথ্য দেখা | Seeing only information that confirms your views ✓","একটি রেডিও প্রোগ্রাম | A radio programme","অনলাইন ফোরাম | An online forum"],correct:1,
+      feedback:"ইকো চেম্বারে মানুষ শুধু তাদের নিজস্ব মতামতের প্রতিধ্বনি শোনে — যা চরম মতবাদে পরিণত হওয়ার পথ তৈরি করে। An echo chamber is when you only receive information confirming your existing views, a pipeline to radicalization."},
+     {q:"বট অ্যাকাউন্টের প্রধান বৈশিষ্ট্য কী?",qEn:"What is a key indicator of a bot account?",
+      options:["অনেক ছবি পোস্ট করে | Posts many photos","অস্বাভাবিক দ্রুত পোস্টিং ও শুধু রাজনৈতিক বিষয় | Unusually fast posting & only political topics ✓","বেশি ফলোয়ার | Many followers","ব্লু টিক আছে | Has a blue tick"],correct:1,
+      feedback:"বটের লক্ষণ: অস্বাভাবিক দ্রুত ও নিয়মিত পোস্টিং, শুধু রাজনৈতিক/বিভাজনমূলক বিষয়বস্তু, পুনরাবৃত্তি, কোনো ব্যক্তিগত জীবনের চিহ্ন নেই। Bot indicators: unnaturally fast/regular posting, only divisive political content, repetition, no signs of personal life."}
+   ]},
+  {id:4,icon:"⚡",
+   titleBn:"ইউনিট ৪: মিথ্যা তথ্যের প্রভাব",titleEn:"Unit 4: Impacts of Misinformation",
+   durationBn:"২ ঘণ্টা",durationEn:"2 hours",xp:25,
+   conceptsBn:["গণমাধ্যমের উপর আস্থাহানি","ডিসইনফোডেমিক — স্বাস্থ্য তথ্যের বিপদ","গণতন্ত্র ও নির্বাচনে মিথ্যা তথ্যের প্রভাব","সম্প্রদায় ও অর্থনীতিতে ক্ষতি"],
+   conceptsEn:["Erosion of trust in journalism and institutions","The 'disinfodemic' — dangers of health misinformation","How disinformation undermines elections and democracy","Community harm and economic damage"],
+   contentBn:[
+     "গণমাধ্যমের উপর আস্থা ধ্বংস: মিথ্যা তথ্যের সবচেয়ে বড় ক্ষতি হলো 'কেউই বিশ্বাসযোগ্য নয়' — এই ধারণা তৈরি করা। যখন মানুষ সত্যিকার সংবাদও বিশ্বাস করতে পারে উল্লেখযোগ্য নয়, তখন গণতন্ত্র বিপন্ন।",
+     "ডিসইনফোডেমিক: COVID-১৯ মহামারীর সময় UNESCO বর্ণনা করেছে কীভাবে স্বাস্থ্য সম্পর্কিত মিথ্যা তথ্য মানুষের চিকিৎসা গ্রহণের আচরণ পরিবর্তন করে, ভ্যাকসিন-বিরোধী আন্দোলন তৈরি করে এবং সত্যিকার মহামারী নিয়ন্ত্রণ বাধাগ্রস্ত করে।",
+     "বাংলাদেশ প্রেক্ষাপট: ২০২৪ সালে ছাত্র-জনতার আন্দোলনের সময় মিথ্যা তথ্য কীভাবে সহিংসতায় অবদান রাখে এবং কীভাবে সাম্প্রদায়িক উত্তেজনা তৈরি হয় — এটি আমাদের নিজেদের বাস্তবতা।"
+   ],
+   contentEn:[
+     "Destroying trust in journalism is disinformation's most dangerous long-term effect. Creating 'nobody can be trusted' — called 'epistemic chaos' — is more damaging than any single false story. When citizens can't trust real news, democracy itself is threatened.",
+     "The 'Disinfodemic' (UNESCO's term for pandemic-era health misinformation): COVID-19 showed how false health information changes treatment-seeking behavior, fuels vaccine hesitancy, and directly obstructs public health interventions. The same dynamic applies to Dengue, cholera, and other health crises.",
+     "Bangladesh context: During the 2024 student-led movement and subsequent political transition, false information about casualties, police actions, and community attacks spread rapidly on social media. Rohingya-related disinformation has contributed to real-world violence in Cox's Bazar — these are not abstract concerns."
+   ],
+   quiz:[
+     {q:"'ডিসইনফোডেমিক' কী?",qEn:"What is a 'disinfodemic'?",
+      options:["একটি সংবাদমাধ্যম | A news outlet","মহামারীর সময় স্বাস্থ্য সম্পর্কিত মিথ্যা তথ্যের মহামারী | An epidemic of health misinformation during a pandemic ✓","মিথ্যা রোগের খবর | False disease news","একটি রোগ | A disease"],correct:1,
+      feedback:"UNESCO-র পরিভাষা: ডিসইনফোডেমিক = তথ্যমারী। মহামারীর সাথে একই সময়ে মিথ্যা স্বাস্থ্য তথ্যের প্রসার। UNESCO coined 'disinfodemic' to describe the epidemic of false health information that accompanied COVID-19 — and has since recurred in every health crisis."},
+     {q:"মিথ্যা তথ্য গণতন্ত্রকে কীভাবে ক্ষতি করে?",qEn:"How does disinformation damage democracy?",
+      options:["ভোটের সংখ্যা কমায় | Reduces vote count","প্রতিষ্ঠানের উপর আস্থা ধ্বংস করে | Destroys trust in institutions ✓","সংসদ দুর্বল করে | Weakens parliament","আইন পরিবর্তন করে | Changes laws"],correct:1,
+      feedback:"মিথ্যা তথ্যের সবচেয়ে বড় গণতান্ত্রিক ক্ষতি: প্রতিষ্ঠান, নির্বাচন ও সংবাদমাধ্যমের উপর আস্থা ধ্বংস। The greatest democratic damage is destroying public trust in institutions, elections, and news media."},
+     {q:"Rohingya সম্পর্কিত মিথ্যা তথ্য বাংলাদেশে কোন সমস্যা তৈরি করেছে?",qEn:"What problem has Rohingya-related disinformation created in Bangladesh?",
+      options:["শুধু অনলাইন বিতর্ক | Only online debate","কক্সবাজারে সাম্প্রদায়িক উত্তেজনা ও সহিংসতা | Communal tension and real-world violence in Cox's Bazar ✓","অর্থনৈতিক সমস্যা | Economic problems","আবহাওয়া পরিবর্তন | Climate change"],correct:1,
+      feedback:"Rohingya সম্পর্কিত মিথ্যা তথ্য কক্সবাজারে হোস্ট-শরণার্থী সম্পর্ককে ক্ষতিগ্রস্ত করেছে এবং সহিংসতায় অবদান রেখেছে। This is not abstract — disinformation about Rohingya communities has directly contributed to host-refugee tensions and violence in Cox's Bazar."}
+   ]},
+  {id:5,icon:"🛡️",
+   titleBn:"ইউনিট ৫: MIL এবং মিথ্যা তথ্য মোকাবেলা",titleEn:"Unit 5: MIL and Combating Misinformation",
+   durationBn:"২ ঘণ্টা",durationEn:"2 hours",xp:30,
+   conceptsBn:["ফ্যাক্ট-চেকিং পদ্ধতি ও টুলস","IFCN কোড অফ প্রিন্সিপলস","Stanford Lateral Reading পদ্ধতি","মিথ্যা তথ্য মোকাবেলা নিরাপদে"],
+   conceptsEn:["Fact-checking methods and tools","IFCN Code of Principles","Stanford Lateral Reading method","Countering misinformation safely without amplifying it"],
+   contentBn:[
+     "ফ্যাক্ট-চেকিং একটি দক্ষতা। মূল পদক্ষেপ: ১) দাবিটি কি যাচাইযোগ্য? মতামত যাচাই হয় না। ২) প্রাথমিক উৎস খুঁজুন। ৩) Lateral Reading — একটি উৎস নিয়ে না ভেবে অনেক উৎস একসাথে দেখুন। ৪) ছবি রিভার্স সার্চ করুন। ৫) সিদ্ধান্ত নিন।",
+     "IFCN (International Fact-Checking Network) — FactWatch ও Rumor Scanner উভয়ই IFCN-স্বাক্ষরিত। IFCN-মানদণ্ড: নিরপেক্ষতা, স্বচ্ছতা, পদ্ধতি প্রকাশ, অর্থায়ন প্রকাশ, সংশোধনের নীতি।",
+     "নিরাপদ মোকাবেলা: মিথ্যা তথ্যের বিরুদ্ধে প্রতিক্রিয়া দিতে গিয়ে আরও বেশি মানুষের কাছে পৌঁছে দেবেন না। 'Backfire effect' এড়াতে: সত্য তথ্য দিন, তর্কে না জড়ান। Prebunking (আগেভাগে সতর্ক করা) Debunking-এর চেয়ে বেশি কার্যকর।"
+   ],
+   contentEn:[
+     "Fact-checking is a skill. Core steps: 1) Is the claim checkable? Opinions cannot be fact-checked. 2) Find the primary source. 3) Lateral Reading — instead of reading one source deeply, quickly check what others say ABOUT that source. 4) Reverse image search. 5) Reach a verdict. Stanford SHEG research shows lateral reading is what professional fact-checkers actually do.",
+     "IFCN (International Fact-Checking Network): FactWatch and Rumor Scanner are both IFCN signatories. IFCN principles require: non-partisanship, transparency about funding, public methodology, correction policy, and accountability. When evaluating a fact-check, always check if they are IFCN-signatory.",
+     "Safe countering: Responding to misinformation can amplify it further — this is the 'Ratio Problem'. To avoid the backfire effect: present true information positively, avoid repeating the false claim. Cambridge's inoculation theory (Roozenbeek & van der Linden) shows that prebunking — exposing weak forms of manipulation tactics BEFORE people encounter them — is more effective than debunking after the fact."
+   ],
+   quiz:[
+     {q:"Stanford-এর 'Lateral Reading' মানে কী?",qEn:"What does Stanford's 'Lateral Reading' mean?",
+      options:["বাম থেকে ডানে পড়া | Reading left to right","একটি উৎসের বদলে সেই উৎস সম্পর্কে অন্যরা কী বলে তা দেখা | Checking what others say about a source rather than reading it deeply ✓","সব পাতা পড়া | Reading all pages","দ্রুত পড়া | Speed reading"],correct:1,
+      feedback:"Stanford SHEG গবেষণা: বিশেষজ্ঞ ফ্যাক্ট-চেকাররা কোনো উৎসের ভেতরে ডুব দেওয়ার আগে সেই উৎস সম্পর্কে অন্যরা কী বলছে তা দেখেন — এটি Lateral Reading। Stanford SHEG research: expert fact-checkers immediately open multiple tabs to check what others say ABOUT a source, rather than reading the source deeply."},
+     {q:"Prebunking এবং Debunking-এর মধ্যে কোনটি বেশি কার্যকর?",qEn:"Which is more effective: Prebunking or Debunking?",
+      options:["Debunking — পরে সংশোধন | Debunking — correct after the fact","Prebunking — আগেভাগে সতর্ক করা | Prebunking — warn people before they encounter manipulation ✓","সমান | Equal effectiveness","নির্ভর করে | Depends"],correct:1,
+      feedback:"Cambridge-এর Roozenbeek ও van der Linden-এর গবেষণা: দুর্বল মাত্রায় মিথ্যা কৌশলে এক্সপোজার ভবিষ্যতে প্রতিরোধ তৈরি করে। এটিই Inoculation Theory — ভাইরাসের বিরুদ্ধে টিকার মতো। Cambridge research: 'prebunking' — exposing people to weakened manipulation tactics — builds cognitive resistance. Like a vaccine for misinformation."},
+     {q:"মিথ্যা তথ্যের প্রতিক্রিয়া দিতে গেলে কোন ঝুঁকি আছে?",qEn:"What risk exists when responding to misinformation?",
+      options:["কোনো ঝুঁকি নেই | No risk","মিথ্যাটি আরও ছড়িয়ে দেওয়া | Amplifying the false claim further ✓","সত্যিকার তথ্য হারানো | Losing true information","নেটওয়ার্ক সমস্যা | Network problems"],correct:1,
+      feedback:"The 'Ratio Problem': মিথ্যার উদ্ধৃতি দিয়ে খণ্ডন করলে মিথ্যাটিই আরও মানুষের কাছে পৌঁছায়। কৌশল: সত্য তথ্য ইতিবাচকভাবে উপস্থাপন করুন, মিথ্যাটি পুনরাবৃত্তি এড়িয়ে চলুন। The 'Ratio Problem': quoting and refuting misinformation can amplify it further. Solution: present true information positively without repeating the false claim."}
+   ]},
+];
+
+// ===== MYTHS DATA =====
+const MYTHS = [
+  {id:1,category:"Digital Safety",
+   myth:"ফেসবুক পোস্ট শেয়ার করলে কম্পিউটার ভাইরাস ছড়ায়",
+   mythEn:"Sharing a Facebook post can spread computer viruses",
+   fact:"পোস্ট শেয়ার করলে ভাইরাস ছড়ায় না। তবে পোস্টের মধ্যে ক্ষতিকর লিঙ্কে ক্লিক করলে ম্যালওয়্যার ইনস্টল হতে পারে।",
+   factEn:"Sharing content cannot spread viruses. However, clicking malicious links within posts can install malware on your device.",
+   source:"Bangladesh Cybersecurity Excellence Centre, 2025"},
+  {id:2,category:"AI Literacy",
+   myth:"AI-তৈরি ছবি সহজেই চেনা যায়",
+   mythEn:"AI-generated images are always easy to identify",
+   fact:"আধুনিক AI ইমেজ বিশেষজ্ঞদেরও বিভ্রান্ত করে। আঙুল, কান ও ছায়া লক্ষ্য করুন — কিন্তু নিশ্চিত হতে AI ডিটেকশন টুল ব্যবহার করুন।",
+   factEn:"Modern AI images can fool even experts. Check fingers, ear details, and shadow consistency — but always use AI detection tools for confirmation.",
+   source:"MIT Media Lab, AI Image Study 2025; Rumor Scanner BD"},
+  {id:3,category:"Platform Literacy",
+   myth:"ভেরিফাইড অ্যাকাউন্ট থেকে পোস্ট সবসময় সত্য",
+   mythEn:"Posts from verified accounts must always be true",
+   fact:"ভেরিফিকেশন পরিচয় নিশ্চিত করে, তথ্যের সত্যতা নয়। যাচাইকৃত অ্যাকাউন্টও মিথ্যা তথ্য ছড়াতে পারে।",
+   factEn:"Verification confirms identity, not accuracy. Verified accounts can and do post false information — always cross-check.",
+   source:"First Draft News, Verification Handbook 2024"},
+  {id:4,category:"Platform Literacy",
+   myth:"ইনকগনিটো মোড ব্যবহার করলে কেউ ব্রাউজিং দেখতে পারে না",
+   mythEn:"Using Incognito mode makes you completely invisible online",
+   fact:"ইনকগনিটো শুধু ডিভাইসে হিস্ট্রি সেভ করা বন্ধ করে। ISP ও ওয়েবসাইট ঠিকই ট্র্যাক করতে পারে।",
+   factEn:"Incognito only stops your local device from saving history. Your ISP and the websites you visit can still track your activity.",
+   source:"Mozilla Foundation; Tech Literacy Guide BD"},
+  {id:5,category:"Media Literacy",
+   myth:"পত্রিকায় বা টিভিতে খবর এসেছে মানেই ১০০% সত্য",
+   mythEn:"If it is on TV or in a newspaper, it must be 100% true",
+   fact:"মূলধারার মিডিয়াও ভুল করতে পারে। সব সময় একাধিক নির্ভরযোগ্য উৎস যাচাই (Lateral Reading) করুন।",
+   factEn:"Mainstream media can make mistakes. Always practise Lateral Reading — check multiple reliable sources before accepting any claim.",
+   source:"Stanford History Education Group (SHEG)"},
+  {id:6,category:"Digital Safety",
+   myth:"হোয়াটসঅ্যাপে 'ফ্রি ইন্টারনেট' লিঙ্কে ক্লিক করলে আসলেই ইন্টারনেট পাওয়া যায়",
+   mythEn:"Clicking 'Free Internet' links on WhatsApp actually gives you free data",
+   fact:"এগুলো ফিশিং স্ক্যাম। হ্যাকাররা লোভনীয় অফারে আপনার তথ্য চুরি করে।",
+   factEn:"These are phishing scams. Hackers use attractive offers to steal your personal information or passwords.",
+   source:"Bangladesh e-Government Computer Incident Response Team (BGD e-GOV CIRT)"},
+  {id:7,category:"Rohingya Context",
+   myth:"সোশ্যাল মিডিয়ায় ছড়ানো Rohingya সম্পর্কিত সব ছবিই বাংলাদেশ থেকে",
+   mythEn:"All viral images about Rohingya on social media are from Bangladesh",
+   fact:"অনেক ভাইরাল ছবি Myanmar, India বা অন্য দেশের পুরনো ঘটনার। এগুলো Bangladesh context-এ মিথ্যাভাবে প্রচার করা হয়।",
+   factEn:"Many viral images are old photos from Myanmar, India, or other countries falsely circulated in the Bangladesh context. Reverse image search is essential.",
+   source:"Rumor Scanner BD; Human Rights Watch Digital Investigations"},
+];
+
+// ===== SHEEP STEPS =====
+const SHEEP_STEPS = [
+  {letter:"S",wordBn:"উৎস",wordEn:"Source",icon:"🔎",
+   titleBn:"উৎসটি কে?",titleEn:"Who is the source?",
+   questionsBn:["অ্যাকাউন্টটি কি যাচাইকৃত/বিশ্বস্ত?","অ্যাকাউন্টের বয়স কত? কতজন অনুসরণ করে?","কি এটি আসল প্রতিষ্ঠানের মতো লাগছে কিন্তু সামান্য ভিন্ন নাম?","লেখকের পরিচয় কি সত্যিকার?"],
+   questionsEn:["Is the account verified or from a trusted organisation?","How old is the account? How many followers?","Does it look like a real organisation but with a slightly different name?","Can you find the author's real identity?"],
+   tipBn:"Bellingcat পদ্ধতি: অ্যাকাউন্টের নাম, URL ও বায়ো গুগলে সার্চ করুন — অন্যরা এটি নিয়ে কী বলছে?",
+   tipEn:"Bellingcat method: Google the account name, URL, and bio — what do others say about this source?",color:"#2563EB"},
+  {letter:"H",wordBn:"ইতিহাস",wordEn:"History",icon:"📅",
+   titleBn:"এই তথ্যের ইতিহাস কী?",titleEn:"What is the history of this information?",
+   questionsBn:["তারিখটি কখন? এটি কি পুরনো তথ্য নতুন হিসেবে প্রচার করা হচ্ছে?","এই দাবিটি আগে কখনো এসেছিল?","কোনো সংযুক্ত ছবির তারিখ কি মিলছে?"],
+   questionsEn:["When was this published? Is old information being recycled as new?","Has this claim appeared before?","Do the dates on any attached images match?"],
+   tipBn:"Google-এ তারিখ ফিল্টার ব্যবহার করুন। খুঁজুন এই দাবি কখন প্রথম এসেছিল।",
+   tipEn:"Use Google's date filter. Search for when this claim first appeared online.",color:"#1D4ED8"},
+  {letter:"E",wordBn:"প্রমাণ",wordEn:"Evidence",icon:"📊",
+   titleBn:"প্রমাণ কি যথেষ্ট?",titleEn:"Is the evidence sufficient?",
+   questionsBn:["কি কোনো প্রাথমিক উৎস বা অফিসিয়াল ডেটা উদ্ধৃত করা হয়েছে?","পরিসংখ্যান কি সুনির্দিষ্ট (নমুনা আকার, তারিখ)?","কোনো বিশেষজ্ঞের মতামত কি নেওয়া হয়েছে?"],
+   questionsEn:["Are primary sources or official data cited?","Are statistics specific (sample size, date, methodology)?","Has expert opinion been sought?"],
+   tipBn:"সত্যিকার গবেষণায় সুনির্দিষ্ট সংখ্যা থাকে। '১০০% নিশ্চিত' বা 'সবাই জানে' — এগুলো রেড ফ্ল্যাগ।",
+   tipEn:"Real research has specific numbers. 'Definitely confirmed' or 'everyone knows' are red flags for lack of evidence.",color:"#7C3AED"},
+  {letter:"E",wordBn:"আবেগ",wordEn:"Emotion",icon:"😤",
+   titleBn:"এটি কি আপনাকে তীব্র অনুভব করাচ্ছে?",titleEn:"Does this make you feel strongly?",
+   questionsBn:["এটি কি আপনাকে ভয়, রাগ বা বিস্মিত করছে?","এটি শেয়ার করার তাগিদ অনুভব করছেন?","এটি কি আপনার বিদ্যমান বিশ্বাস নিশ্চিত করছে?"],
+   questionsEn:["Does this make you feel fear, anger, or outrage?","Do you feel the urge to share it immediately?","Does it confirm something you already believe?"],
+   tipBn:"তীব্র আবেগ = শেয়ারের আগে থামুন। মিথ্যা তথ্য সচেতনভাবে আপনার আবেগকে টার্গেট করে।",
+   tipEn:"Strong emotion = pause before sharing. Misinformation deliberately targets your emotions to bypass rational thinking.",color:"#DC2626"},
+  {letter:"P",wordBn:"ছবি/ভিডিও",wordEn:"Pictures/Video",icon:"🖼️",
+   titleBn:"ছবি বা ভিডিওটি কি আসল?",titleEn:"Is the image or video authentic?",
+   questionsBn:["ছবিটি রিভার্স সার্চ করলে কী পাওয়া যায়?","ভিডিওর metadata কি বলছে?","আঙুল, কান, পটভূমি কি স্বাভাবিক দেখাচ্ছে?"],
+   questionsEn:["What does reverse image search reveal?","What does video metadata show?","Do fingers, ears, shadows, and backgrounds look natural?"],
+   tipBn:"Google Images, TinEye বা InVID দিয়ে ছবি/ভিডিও যাচাই করুন। AI ছবিতে হাত ও কানের গঠন প্রায়ই অস্বাভাবিক।",
+   tipEn:"Use Google Images, TinEye or InVID to verify. AI images often have unnatural hands, ears, and background inconsistencies.",color:"#D97706"},
+];
+
+// ===== QUICK QUIZ =====
+const QUIZ = [
+  {q:"একটি পোস্টে: 'এখনই শেয়ার করুন নাহলে অ্যাকাউন্ট বন্ধ!' — এটা কিসের লক্ষণ?",qEn:"A post says: 'Share NOW or your account will be deleted!' — What is this?",
+   options:["সত্য জরুরি তথ্য | Real urgent info","ভয় দেখানোর কৌশল | Fear-based manipulation ✓","সরকারি বিজ্ঞপ্তি | Govt. notice","নিরাপত্তা সতর্কতা | Security alert"],correct:1,
+   feedback:"জরুরিতার ভয় মিথ্যা তথ্যের সবচেয়ে সাধারণ কৌশল। বৈধ সংবাদে কখনো শেয়ারের চাপ দেওয়া হয় না। Urgency and fear are the #1 manipulation tactic. Legitimate news never pressures you to share immediately."},
+  {q:"ছবি যাচাইয়ের সবচেয়ে দ্রুত প্রথম ধাপ কোনটি?",qEn:"What is the fastest first step to verify an image?",
+   options:["পরিচিতদের জিজ্ঞেস করুন | Ask friends","রিভার্স ইমেজ সার্চ | Reverse image search ✓","লাইক সংখ্যা দেখুন | Check like count","শেয়ার করুন | Share it"],correct:1,
+   feedback:"Google Images বা TinEye-তে রিভার্স সার্চ করলে ছবির আসল উৎস, তারিখ ও প্রেক্ষাপট জানা যায়। Reverse image search on Google Images or TinEye reveals the original source, date, and real context."},
+  {q:"IFCN কোড অনুযায়ী ফ্যাক্ট-চেকার কীভাবে চেনা যায়?",qEn:"How do you identify a credible fact-checker per IFCN Code?",
+   options:["সরকারি অনুমোদন | Govt. approval","IFCN স্বাক্ষরিত, পদ্ধতি প্রকাশিত | IFCN-signatory, transparent methodology ✓","বেশি ফলোয়ার | More followers","পুরনো প্রতিষ্ঠান | Old organisation"],correct:1,
+   feedback:"FactWatch ও Rumor Scanner উভয়ই IFCN-স্বাক্ষরিত — স্বচ্ছতা, পদ্ধতি, নিরপেক্ষতার মানদণ্ড মানে। Both are IFCN signatories, meeting international standards for transparency, methodology, and non-partisanship."},
+  {q:"Inoculation Theory কী শেখায়?",qEn:"What does Inoculation Theory teach us?",
+   options:["মিথ্যা তথ্য ক্ষতিকর নয় | Misinformation is harmless","দুর্বল মিথ্যা কৌশলে এক্সপোজার পরে প্রতিরোধ তৈরি করে | Exposure to weak manipulation builds future resistance ✓","শুধু শিশুদের জন্য | Only for children","টিকা নিন | Take vaccines"],correct:1,
+   feedback:"Cambridge-এর Roozenbeek ও van der Linden: ভ্যাকসিনের মতো, দুর্বল মিথ্যা কৌশলে এক্সপোজার ভবিষ্যতের পূর্ণ আক্রমণ থেকে রক্ষা করে। Like a vaccine, exposure to weakened manipulation tactics builds cognitive antibodies against the full-strength version."},
+  {q:"SHEEP Framework-এর 'E' (Emotion) ধাপে কী করতে হয়?",qEn:"What does the 'E' (Emotion) step in SHEEP ask you to check?",
+   options:["লেখকের আবেগ | Author's emotion","আপনি কি তীব্র অনুভব করছেন? যাচাইয়ের আগে থামুন | Do you feel strongly? Pause before sharing ✓","ইমোজির সংখ্যা | Number of emojis","গল্পটি দুঃখজনক কিনা | If the story is sad"],correct:1,
+   feedback:"SHEEP-এর E: তীব্র আবেগ মানে থামো। মিথ্যা তথ্য আপনার আবেগ ট্রিগার করার জন্য ডিজাইন করা। SHEEP's E: Strong emotion means STOP. Misinformation is deliberately designed to trigger your emotions and bypass rational thinking."},
+];
+
+// ===== MAIN APP =====
+function App() {
+  const [view, setView] = useState('home');
+  const [lang, setLang] = useState('bn');
+  const [toast, setToast] = useState(null);
+  const [xp, setXp] = useState(0);
+  const [xpPopup, setXpPopup] = useState(null);
+  const [badges, setBadges] = useState([]);
+  const [completedUnits, setCompletedUnits] = useState([]);
+
+  function showToast(msg) {
+    setToast(msg);
+    setTimeout(() => setToast(null), 3000);
+  }
+
+  function addXP(amount, reason) {
+    setXp(x => x + amount);
+    setXpPopup(`+${amount} XP — ${reason}`);
+    setTimeout(() => setXpPopup(null), 2500);
+  }
+
+  function earnBadge(badge) {
+    setBadges(b => b.find(x => x.id === badge.id) ? b : [...b, badge]);
+  }
+
+  function completeUnit(unitId) {
+    if (!completedUnits.includes(unitId)) {
+      setCompletedUnits(u => [...u, unitId]);
+      const unit = MIL_UNITS.find(u => u.id === unitId);
+      addXP(unit.xp, lang === 'bn' ? `ইউনিট ${unitId} সম্পন্ন` : `Unit ${unitId} completed`);
+      earnBadge({id:`unit${unitId}`,icon:'📚',name:`Unit ${unitId} Scholar`});
+    }
+  }
+
+  const level = getLevel(xp);
+  const levelPct = getLevelPct(xp);
+  const NAV = [
+    {id:'home',bn:'হোম',en:'Home'},
+    {id:'game',bn:'ভুয়া ধরুন',en:'Spot Fake'},
+    {id:'rumor',bn:'গুজব কারখানা',en:'Rumor Factory'},
+    {id:'mil',bn:'UNESCO MIL',en:'UNESCO MIL'},
+    {id:'sheep',bn:'SHEEP যাচাই',en:'SHEEP Verify'},
+    {id:'ai',bn:'AI চেকার',en:'AI Checker'},
+    {id:'myths',bn:'মিথ',en:'Myths'},
+    {id:'quiz',bn:'কুইজ',en:'Quiz'},
+    {id:'cert',bn:'সনদপত্র',en:'Certificate'},
+  ];
+
+  return (
+    <div>
+      <nav className="navbar">
+        <div className="navbar-brand" onClick={() => setView('home')}>
+          <div className="navbar-logo">স</div>
+          <div>
+            <div className="navbar-title font-en">সত্যান্বেষক</div>
+            <div className="navbar-subtitle">Shottanneshok</div>
+          </div>
+        </div>
+        <div className="navbar-nav">
+          {NAV.map(n => (
+            <button key={n.id} className={`nav-btn${view===n.id?' active':''}`} onClick={() => setView(n.id)}>
+              {lang==='bn' ? n.bn : n.en}
+            </button>
+          ))}
+        </div>
+        <button className="lang-btn" onClick={() => setLang(l => l==='bn'?'en':'bn')}>
+          {lang==='bn' ? 'EN' : 'বাং'}
+        </button>
+      </nav>
+      
+      <div className="xp-bar-wrap">
+        <span className="xp-level-badge">{level.icon} {lang==='bn' ? level.title : level.titleEn}</span>
+        <div className="xp-bar-track"><div className="xp-bar-fill" style={{width:`${levelPct}%`}}/></div>
+        <span style={{fontFamily:'Roboto Mono,monospace',fontSize:11, fontWeight:600}}>{xp} XP</span>
+      </div>
+
+      {view==='home' && <HomePage setView={setView} lang={lang} level={level} xp={xp} completedUnits={completedUnits}/>}
+      {view==='game' && <GamePage lang={lang} showToast={showToast} addXP={addXP} earnBadge={earnBadge}/>}
+      {view==='rumor' && <RumorFactoryPage lang={lang} addXP={addXP} earnBadge={earnBadge}/>}
+      {view==='mil' && <MILPage lang={lang} completedUnits={completedUnits} completeUnit={completeUnit} addXP={addXP}/>}
+      {view==='sheep' && <SHEEPPage lang={lang} addXP={addXP}/>}
+      {view==='ai' && <AICheckerPage lang={lang} addXP={addXP}/>}
+      {view==='myths' && <MythsPage lang={lang} addXP={addXP}/>}
+      {view==='quiz' && <QuizPage lang={lang} addXP={addXP} earnBadge={earnBadge}/>}
+      {view==='cert' && <CertPage lang={lang} xp={xp} level={level} completedUnits={completedUnits} badges={badges}/>}
+
+      {toast && <div className="toast">{toast}</div>}
+      {xpPopup && <div className="xp-popup">⚡ {xpPopup}</div>}
+    </div>
+  );
+}
+
+// ===== HOME PAGE =====
+function HomePage({ setView, lang, level, xp, completedUnits }) {
+  const pillars = [
+    {icon:'🕵️',bn:'সনাক্ত করুন',en:'Identify',desc:lang==='bn'?'মিথ্যা তথ্যের ধরন ও কৌশল চিনুন':'Recognise types and tactics of false information'},
+    {icon:'🔍',bn:'যাচাই করুন',en:'Verify',desc:lang==='bn'?'SHEEP, Lateral Reading ও OSINT টুল ব্যবহার করুন':'Use SHEEP, Lateral Reading & OSINT tools'},
+    {icon:'🛡️',bn:'মোকাবেলা করুন',en:'Counter',desc:lang==='bn'?'নিরাপদে ও কার্যকরভাবে সাড়া দিন':'Respond safely and effectively'},
+  ];
+  return (
+    <div className="page">
+      <div className="section" style={{background:'linear-gradient(135deg,var(--primary-dark),var(--primary-mid))',color:'white',textAlign:'center'}}>
+        <div style={{fontSize:12,fontFamily:'Roboto Mono,monospace',color:'var(--primary-light)',letterSpacing:2,marginBottom:12,textTransform:'uppercase',fontWeight:500}}>#ThinkBeforeYouShare • ActionAid Bangladesh • EU EOM</div>
+        <h1 style={{fontFamily:'Inter,sans-serif',fontSize:'clamp(28px,5vw,42px)',fontWeight:800,lineHeight:1.15,marginBottom:16,letterSpacing:'-0.02em'}}>
+          {lang==='bn' ? 'মিথ্যা তথ্য মোকাবেলা করুন।' : 'Fight Misinformation.'}
+        </h1>
+        <p style={{maxWidth:560,margin:'0 auto 24px',opacity:0.85,lineHeight:1.7,fontSize:15}}>
+          {lang==='bn'
+            ? 'UNESCO MIL মডিউল ৪, Stanford Lateral Reading ও Cambridge Inoculation Theory-র উপর ভিত্তি করে তৈরি বাংলাদেশের প্রথম গেমিফাইড ফ্যাক্ট-চেক প্ল্যাটফর্ম।'
+            : 'Bangladesh\'s first gamified fact-check platform — grounded in UNESCO MIL Module 4, Stanford Lateral Reading, and Cambridge Inoculation Theory.'}
+        </p>
+        <div style={{display:'flex',justifyContent:'center',gap:12,flexWrap:'wrap'}}>
+          <button className="btn-primary" onClick={() => setView('game')}>🎮 {lang==='bn' ? 'খেলুন' : 'Play Now'}</button>
+          <button onClick={() => setView('mil')} style={{padding:'10px 24px',background:'rgba(255,255,255,0.1)',color:'white',border:'1px solid rgba(255,255,255,0.3)',borderRadius:6,fontSize:14,fontWeight:600,cursor:'pointer',fontFamily:'Inter,sans-serif',transition:'all 0.2s'}}>
+            📚 {lang==='bn' ? 'শিখুন' : 'Learn'}
+          </button>
+        </div>
+      </div>
+
+      <div className="section" style={{background:'white',borderBottom:'1px solid var(--border)'}}>
+        <div style={{maxWidth:800,margin:'0 auto'}}>
+          <div className="section-tag">{lang==='bn' ? 'তিনটি দক্ষতা' : 'Three Skills'}</div>
+          <h2 className="section-title">{lang==='bn' ? 'তিনটি অভ্যাস। একটি লক্ষ্য।' : 'Three Habits. One Mission.'}</h2>
+          <div className="card-grid">
+            {pillars.map((p,i) => (
+              <div key={i} className="card" style={{textAlign:'center'}}>
+                <div style={{fontSize:32,marginBottom:10}}>{p.icon}</div>
+                <div style={{fontFamily:'Inter,sans-serif',fontWeight:700,fontSize:16,marginBottom:6,color:'var(--dark)'}}>{lang==='bn'?p.bn:p.en}</div>
+                <div style={{fontSize:13,color:'var(--mid)',lineHeight:1.6}}>{p.desc}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="section" style={{background:'var(--bg-color)'}}>
+        <div style={{maxWidth:800,margin:'0 auto'}}>
+          <div className="section-tag">{lang==='bn' ? 'আপনার অগ্রগতি' : 'Your Progress'}</div>
+          <h2 className="section-title">{lang==='bn' ? `আপনি এখন: ${level.icon} ${level.title}` : `You are: ${level.icon} ${level.titleEn}`}</h2>
+          <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(150px,1fr))',gap:12,marginBottom:24}}>
+            {[
+              {label:lang==='bn'?'মোট XP':'Total XP',value:`${xp}`,icon:'⚡'},
+              {label:lang==='bn'?'সম্পন্ন ইউনিট':'Units Done',value:`${completedUnits.length}/5`,icon:'📚'},
+              {label:lang==='bn'?'পরবর্তী স্তর':'Next Level',value:`${Math.max(0,getLevel(xp+1).min-xp)} XP`,icon:'🎯'},
+            ].map((s,i) => (
+              <div key={i} style={{background:'white',borderRadius:8,padding:'16px',textAlign:'center',border:'1px solid var(--border)',boxShadow:'0 1px 2px rgba(0,0,0,0.02)'}}>
+                <div style={{fontSize:22,marginBottom:4}}>{s.icon}</div>
+                <div style={{fontFamily:'Inter,sans-serif',fontSize:24,fontWeight:800,color:'var(--primary-dark)',letterSpacing:'-0.02em'}}>{s.value}</div>
+                <div style={{fontSize:12,color:'var(--mid)',fontWeight:500}}>{s.label}</div>
+              </div>
+            ))}
+          </div>
+          <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:12}}>
+            {[
+              {id:'game',icon:'🎮',bn:'ভুয়া পোস্ট ধরুন',en:'Spot the Fake',color:'var(--primary)'},
+              {id:'rumor',icon:'🏭',bn:'গুজব কারখানা',en:'Rumor Factory',color:'var(--primary-dark)'},
+              {id:'sheep',icon:'🐑',bn:'SHEEP যাচাই',en:'SHEEP Framework',color:'var(--accent)'},
+              {id:'ai',icon:'🤖',bn:'AI ফ্যাক্ট-চেক',en:'AI Fact-Check',color:'var(--mid)'},
+            ].map(a => (
+              <button key={a.id} onClick={() => setView(a.id)} style={{padding:'16px 12px',background:a.color,color:'white',border:'none',borderRadius:8,cursor:'pointer',fontSize:14,fontWeight:600,fontFamily:'Inter,sans-serif',display:'flex',flexDirection:'column',alignItems:'center',gap:8,boxShadow:'0 2px 4px rgba(0,0,0,0.1)'}}>
+                <span style={{fontSize:24}}>{a.icon}</span>
+                {lang==='bn'?a.bn:a.en}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="section" style={{background:'var(--primary-dark)',color:'white',textAlign:'center'}}>
+        <div style={{maxWidth:600,margin:'0 auto'}}>
+          <div style={{fontSize:13,fontFamily:'Roboto Mono,monospace',color:'var(--primary-light)',marginBottom:10,letterSpacing:1,fontWeight:500}}>UNESCO MIL MODULE 4</div>
+          <h2 style={{fontFamily:'Inter,sans-serif',fontSize:22,fontWeight:700,marginBottom:12,letterSpacing:'-0.01em'}}>
+            {lang==='bn' ? '"মিথ্যা উড়ে যায়, সত্য খুঁড়িয়ে আসে।"' : '"Falsehood flies, truth comes limping after it."'}
+          </h2>
+          <p style={{opacity:0.75,fontSize:13,marginBottom:20}}>— Jonathan Swift, {lang==='bn' ? '১৭শ শতক' : '17th century'}</p>
+          <button className="btn-primary" onClick={() => setView('mil')}>
+            📖 {lang==='bn' ? 'UNESCO MIL পাঠ্যক্রম শুরু করুন' : 'Start UNESCO MIL Curriculum'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ===== GAME PAGE (Spot the Fake) =====
+function GamePage({ lang, showToast, addXP, earnBadge }) {
+  const [current, setCurrent] = useState(0);
+  const [answered, setAnswered] = useState(null);
+  const [score, setScore] = useState(0);
+  const [done, setDone] = useState(false);
+  const [userAnswers, setUserAnswers] = useState([]);
+  const [pauseTimer, setPauseTimer] = useState(3);
+
+  const post = GAME_POSTS[current];
+
+  useEffect(() => {
+    if (answered === null && !done) {
+      setPauseTimer(3);
+      const t = setInterval(() => { 
+        setPauseTimer(p => {
+          if (p <= 1) {
+            clearInterval(t);
+            return 0;
+          }
+          return p - 1;
+        });
+      }, 1000);
+      return () => clearInterval(t);
+    }
+  }, [current, answered, done]);
+
+  function handleAnswer(guess) {
+    if (answered !== null || pauseTimer > 0) return;
+    const correct = guess === post.verdict;
+    setAnswered(guess);
+    if (correct) {
+      setScore(s => s+1);
+      addXP(10, lang==='bn' ? 'সঠিক উত্তর' : 'Correct answer');
+    }
+    setUserAnswers(a => [...a, {correct, verdict:post.verdict, guess}]);
+  }
+
+  function handleNext() {
+    if (current < GAME_POSTS.length-1) { setCurrent(c=>c+1); setAnswered(null); }
+    else { setDone(true); if (score >= 6) earnBadge({id:'spotter',icon:'🕵️',name:'Master Spotter'}); }
+  }
+  function handleRestart() { setCurrent(0); setAnswered(null); setScore(0); setDone(false); setUserAnswers([]); }
+  const pct = ((current+(answered!==null?1:0))/GAME_POSTS.length)*100;
+
+  if (done) {
+    const pct2 = Math.round((score/GAME_POSTS.length)*100);
+    const grade = pct2>=80?(lang==='bn'?'চমৎকার! সত্যান্বেষক!':'Excellent! You\'re a Truth Seeker!'):
+                  pct2>=60?(lang==='bn'?'ভালো! আরও অভ্যাস করুন।':'Good! Keep practising.'):
+                  (lang==='bn'?'শেখার সুযোগ আছে — MIL মডিউল দেখুন।':'Room to grow — check the MIL modules.');
+    return (
+      <div className="page">
+        <div className="game-header"><div className="game-header-title">🎮 {lang==='bn'?'খেলা শেষ!':'Game Over!'}</div></div>
+        <div className="game-body">
+          <div className="score-card card">
+            <div style={{fontSize:48,marginBottom:12}}>{pct2>=80?'🏆':pct2>=60?'⭐':'📚'}</div>
+            <div style={{fontSize:13,color:'var(--mid)',marginBottom:4,fontWeight:500}}>{lang==='bn'?'আপনার স্কোর':'Your Score'}</div>
+            <div className="score-big">{score}/{GAME_POSTS.length}</div>
+            <div style={{fontSize:15,fontWeight:600,color:'var(--primary-dark)',marginBottom:20,marginTop:8}}>{grade}</div>
+            <div style={{display:'flex',justifyContent:'center',gap:8,marginBottom:24}}>
+              {userAnswers.map((a,i) => (
+                <div key={i} style={{width:32,height:32,borderRadius:'50%',background:a.correct?'var(--green)':'var(--red)',color:'white',display:'flex',alignItems:'center',justifyContent:'center',fontSize:13,fontWeight:700}}>{a.correct?'✓':'✗'}</div>
+              ))}
+            </div>
+            <button className="btn-outline" onClick={handleRestart}>🔄 {lang==='bn'?'আবার খেলুন':'Play Again'}</button>
+            <div style={{fontSize:12,color:'var(--light)',marginTop:20,fontFamily:'Inter,sans-serif'}}>
+              <a href="#" onClick={(e)=>{e.preventDefault(); /* Would go to MIL but keeping simple */}} style={{color:'var(--primary)',textDecoration:'none',fontWeight:500}}>
+                {lang==='bn'?'UNESCO MIL পাঠ্যক্রমে এগিয়ে যান →':'Continue to UNESCO MIL Curriculum →'}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="page">
+      <div className="game-header">
+        <div className="game-header-title">🎮 {lang==='bn'?'ভুয়া পোস্ট ধরুন':'Spot the Fake'}</div>
+        <div className="game-header-sub">{lang==='bn'?'এই পোস্টটি সত্যি নাকি ভুয়া?':'Is this post Real or Fake?'}</div>
+        <div className="game-progress-bar-wrap"><div className="game-progress-bar-fill" style={{width:`${pct}%`}}/></div>
+        <div className="game-counter">{current+1}/{GAME_POSTS.length} • {lang==='bn'?'স্কোর':'Score'}: {score} • +10 XP {lang==='bn'?'প্রতিটি সঠিক':'per correct'}</div>
+      </div>
+      <div className="game-body">
+        <div className="post-card" key={post.id}>
+          <div className="post-card-header">
+            <div className="post-avatar" style={{background:post.avatarBg,fontSize:20}}>{post.avatar}</div>
+            <div><div className="post-account">{post.account}</div><div className="post-platform">{post.platform}</div></div>
+          </div>
+          <div className="post-body">
+            <div className="post-content">{lang==='bn'?post.content:post.contentEn}</div>
+            <div className="post-engagement">{lang==='bn'?post.engagement:post.engagementEn}</div>
+            {post.warning && answered===null && (
+              <div className="post-warning"><span>💡</span><span style={{fontWeight:500}}>{lang==='bn'?'লক্ষ্য করুন: ':'Notice: '}{post.warning}</span></div>
+            )}
+          </div>
+        </div>
+        {answered!==null && (
+          <div className={`verdict-reveal ${post.verdict}`}>
+            <div className={`verdict-badge ${post.verdict}`}>{post.verdict==='fake'?(lang==='bn'?'❌ ভুয়া':'❌ FAKE'):(lang==='bn'?'✅ সত্যি':'✅ REAL')}</div>
+            <div className="verdict-title">{answered===post.verdict?(lang==='bn'?'✓ সঠিক!':'✓ Correct!'):(lang==='bn'?'✗ ভুল':'✗ Incorrect')}</div>
+            <div className="verdict-text">{lang==='bn'?post.explanation:post.explanationEn}</div>
+          </div>
+        )}
+        {answered===null ? (
+          <div>
+            {pauseTimer>0 && <div style={{textAlign:'center',marginBottom:12,color:'var(--accent)',fontWeight:600,fontSize:14}}>⏳ {lang==='bn'?`শেয়ারের আগে থামুন... (${pauseTimer}s)`:`Pause before you decide... (${pauseTimer}s)`}</div>}
+            <div className="game-action-buttons">
+              <button disabled={pauseTimer>0} className={`btn-real`} onClick={() => handleAnswer('real')}>✅ {lang==='bn'?'সত্যি':'REAL'}</button>
+              <button disabled={pauseTimer>0} className={`btn-fake`} onClick={() => handleAnswer('fake')}>❌ {lang==='bn'?'ভুয়া':'FAKE'}</button>
+            </div>
+          </div>
+        ) : (
+          <button className="btn-next" onClick={handleNext}>{current<GAME_POSTS.length-1?(lang==='bn'?'পরবর্তী পোস্ট →':'Next Post →'):(lang==='bn'?'ফলাফল দেখুন →':'See Results →')}</button>
+        )}
+        <div style={{textAlign:'center',fontSize:11,color:'var(--light)',fontFamily:'Roboto Mono,monospace',marginTop:16}}>📌 {lang==='bn'?'উৎস: FactWatch BD, Rumor Scanner — ডেমো ডেটা':'Sources: FactWatch BD, Rumor Scanner — Demo data'}</div>
+      </div>
+    </div>
+  );
+}
+
+// ===== RUMOR FACTORY PAGE =====
+function RumorFactoryPage({ lang, addXP, earnBadge }) {
+  const [step, setStep] = useState(-1);
+  const [followers, setFollowers] = useState(0);
+  const [credibility, setCredibility] = useState(0);
+  const [rfBadges, setRfBadges] = useState([]);
+  const [feed, setFeed] = useState([]);
+  const [showFeedback, setShowFeedback] = useState(false);
+  const [feedbackData, setFeedbackData] = useState(null);
+  const [done, setDone] = useState(false);
+  const fmt = n => n>=1000?(n/1000).toFixed(1)+'K':n;
+
+  const scenario = step >= 0 && step < GAME_SCENARIOS.length ? GAME_SCENARIOS[step] : null;
+
+  function handleChoice(choice) {
+    setFollowers(f => Math.max(0,f+choice.followers));
+    setCredibility(c => Math.max(0,c+choice.credibility));
+    if (choice.badge) {
+      setRfBadges(b => b.find(x=>x.nameEn===choice.badge.nameEn)?b:[...b,choice.badge]);
+    }
+    if (choice.postEn) {
+      setFeed(f => [{id:Date.now(),textBn:choice.postBn,textEn:choice.postEn,likes:Math.floor(Math.random()*5000)+1000,shares:Math.floor(Math.random()*2000)+500},...f]);
+    }
+    setFeedbackData({ok:choice.followers>0,bn:choice.feedbackBn,en:choice.feedbackEn});
+    setShowFeedback(true);
+  }
+
+  function nextStep() {
+    setShowFeedback(false);
+    if (step < GAME_SCENARIOS.length-1) setStep(s=>s+1);
+    else { setDone(true); addXP(50, lang==='bn'?'গুজব কারখানা সম্পন্ন':'Rumor Factory completed'); earnBadge({id:'rf',icon:'🏭',name:'Rumor Analyst'}); }
+  }
+
+  if (done) return (
+    <div className="rf-page">
+      <div style={{maxWidth:680,margin:'0 auto',padding:'24px 16px'}}>
+        <div className="rf-debrief">
+          <div className="rf-debrief-title">🎓 {lang==='bn'?'ডিব্রিফিং: আপনি কী শিখলেন?':'Debrief: What Did You Learn?'}</div>
+          <p style={{fontSize:14,color:'#CBD5E1',lineHeight:1.8,marginBottom:16}}>
+            {lang==='bn'
+              ? 'আপনি এইমাত্র একজন তথ্য-হেরফেরকারীর ভূমিকায় অভিনয় করলেন। আপনি যা করলেন তা হলো: ছদ্মবেশ, আবেগ-উদ্দীপনা, ষড়যন্ত্রতত্ত্ব, মানহানি ও ট্রোলিং — এগুলোই বাস্তব ডিসইনফোর্মেশনের হাতিয়ার।'
+              : "You just played the role of a disinformation actor. What you used: impersonation, emotional manipulation, conspiracy theory, discrediting, and trolling — these are the real tools of disinformation campaigns in Bangladesh and globally."}
+          </p>
+          {[
+            {icon:'🎭',bn:'ছদ্মবেশ',en:'Impersonation',desc:lang==='bn'?'বিশ্বাসযোগ্য পরিচিতি তৈরি করে বিশ্বাসযোগ্যতা অর্জন করে':'Creates false authority by mimicking trusted identities'},
+            {icon:'🔥',bn:'আবেগ',en:'Emotion',desc:lang==='bn'?'যৌক্তিক চিন্তা বাইপাস করে তাৎক্ষণিক শেয়ার নিশ্চিত করে':'Bypasses critical thinking to guarantee immediate sharing'},
+            {icon:'👁️',bn:'ষড়যন্ত্র',en:'Conspiracy',desc:lang==='bn'?'সরল ব্যাখ্যা দেয়, বিপ্লবী বীরের অনুভূতি দেয়':'Offers simple explanations, creates feeling of special knowledge'},
+            {icon:'🎯',bn:'মানহানি',en:'Discredit',desc:lang==='bn'?'সত্য উদ্ঘাটনকারীকে নীরব করে দেয়':'Silences truth-tellers by destroying their reputation'},
+            {icon:'🤡',bn:'ট্রোলিং',en:'Trolling',desc:lang==='bn'?'বিরোধীদের ক্লান্ত ও ভীত করে প্ল্যাটফর্ম ছেড়ে দিতে বাধ্য করে':'Exhausts opponents until they leave the platform in fear'},
+          ].map((t,i) => (
+            <div key={i} style={{display:'flex',gap:12,padding:'12px 0',borderBottom:'1px solid #334155',alignItems:'flex-start'}}>
+              <span style={{fontSize:20,flexShrink:0}}>{t.icon}</span>
+              <div><div style={{fontWeight:600,color:'var(--accent)',fontSize:14}}>{lang==='bn'?t.bn:t.en}</div><div style={{fontSize:13,color:'#94A3B8',lineHeight:1.5,marginTop:2}}>{t.desc}</div></div>
+            </div>
+          ))}
+          <div style={{marginTop:20,padding:16,background:'rgba(34,197,94,0.1)',borderRadius:6,border:'1px solid rgba(34,197,94,0.3)',fontSize:13,color:'#4ADE80',lineHeight:1.7}}>
+            🛡️ {lang==='bn'
+              ? 'Inoculation Theory (Cambridge): এই কৌশলগুলোর সাথে পরিচিত হওয়াই আপনার প্রতিরোধ ক্ষমতা তৈরি করে। আপনি এখন এগুলো বাস্তবে দেখলে চিনতে পারবেন।'
+              : 'Inoculation Theory (Cambridge): Being exposed to these tactics in a controlled environment builds your cognitive resistance. You will now recognise them in the real world.'}
+          </div>
+          <div style={{textAlign:'center',marginTop:24}}>
+            <div style={{color:'#4ADE80',fontSize:18,fontWeight:700,marginBottom:12}}>✅ +50 XP {lang==='bn'?'অর্জিত':'earned'}!</div>
+            <button onClick={() => {setStep(-1);setFollowers(0);setCredibility(0);setRfBadges([]);setFeed([]);setDone(false);}} className="btn-primary">🔄 {lang==='bn'?'আবার খেলুন':'Play Again'}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="rf-page">
+      <div className="rf-header">
+        <div className="rf-title">🏭 {lang==='bn'?'গুজব কারখানা':'The Rumor Factory'}</div>
+        <div style={{color:'#94A3B8',fontSize:12,marginTop:4,fontFamily:'Inter,sans-serif'}}>{lang==='bn'?'Inoculation Theory — বিপরীত দিক থেকে শিখুন':'Inoculation Theory — learn from the inside'}</div>
+      </div>
+      <div style={{maxWidth:680,margin:'0 auto',padding:'16px'}}>
+        {step===-1 ? (
+          <div>
+            <div style={{background:'#1E293B',border:'1px solid #334155',borderRadius:8,padding:20,marginBottom:16,color:'#E2E8F0',fontSize:14,lineHeight:1.8}}>
+              <p style={{fontSize:16,fontWeight:600,color:'var(--accent)',marginBottom:8}}>⚠️ {lang==='bn'?'একটি অন্যরকম শিক্ষা':'A Different Kind of Lesson'}</p>
+              <p>{lang==='bn'
+                ?'আপনি এখন একজন তথ্য-হেরফেরকারীর ভূমিকায় অভিনয় করবেন। লক্ষ্য: মিথ্যা তথ্য প্রচারের কৌশলগুলো ভেতর থেকে বোঝা — যাতে বাস্তবে এগুলো দেখলে চিনতে পারেন।'
+                :'You are about to play the role of a disinformation actor. Goal: understand manipulation tactics from the inside — so you can recognise them in real life. This is inoculation theory in action.'}
+              </p>
+            </div>
+            <div className="rf-stats">
+              {[{label:lang==='bn'?'ফলোয়ার':'Followers',val:'0'},{label:lang==='bn'?'বিশ্বাসযোগ্যতা':'Credibility',val:'0'},{label:lang==='bn'?'ব্যাজ':'Badges',val:'0'}].map((s,i) => (
+                <div key={i} className="rf-stat"><div className="rf-stat-val">{s.val}</div><div className="rf-stat-label">{s.label}</div></div>
+              ))}
+            </div>
+            <button onClick={() => setStep(0)} className="btn-primary" style={{width:'100%',justifyContent:'center',marginTop:8}}>
+              🎮 {lang==='bn'?'কারখানা শুরু করুন':'Start the Factory'}
+            </button>
+          </div>
+        ) : (
+          <div>
+            <div className="rf-stats">
+              {[{label:lang==='bn'?'ফলোয়ার':'Followers',val:fmt(followers)},{label:lang==='bn'?'বিশ্বাসযোগ্যতা':'Credibility',val:credibility},{label:lang==='bn'?'ব্যাজ':'Badges',val:rfBadges.length}].map((s,i) => (
+                <div key={i} className="rf-stat"><div className="rf-stat-val">{s.val}</div><div className="rf-stat-label">{s.label}</div></div>
+              ))}
+            </div>
+            {rfBadges.length>0 && (
+              <div style={{display:'flex',gap:6,flexWrap:'wrap',marginBottom:10}}>
+                {rfBadges.map((b,i) => <span key={i} className="rf-badge">{b.icon} {lang==='bn'?b.nameBn:b.nameEn}</span>)}
+              </div>
+            )}
+            {!showFeedback && scenario && (
+              <div>
+                <div style={{fontSize:11,fontFamily:'Roboto Mono,monospace',color:'#94A3B8',marginBottom:6,fontWeight:500}}>পরিস্থিতি {step+1}/{GAME_SCENARIOS.length}</div>
+                <div className="rf-mentor">{lang==='bn'?scenario.mentorBn:scenario.mentorEn}</div>
+                <div className="rf-choices">
+                  {scenario.choices.map((c,i) => (
+                    <button key={i} className="rf-choice" onClick={() => handleChoice(c)}>{lang==='bn'?c.textBn:c.textEn}</button>
+                  ))}
+                </div>
+              </div>
+            )}
+            {showFeedback && feedbackData && (
+              <div>
+                <div className="rf-feedback">
+                  <div style={{fontWeight:600,color:feedbackData.ok?'#4ADE80':'#F87171',marginBottom:8}}>
+                    {feedbackData.ok?(lang==='bn'?'✓ কৌশল কাজ করেছে!':'✓ Tactic worked!'):(lang==='bn'?'✗ ভুল পছন্দ':'✗ Wrong choice')}
+                  </div>
+                  {lang==='bn'?feedbackData.bn:feedbackData.en}
+                </div>
+                {feed.length>0 && (
+                  <div className="rf-feed">
+                    {feed.slice(0,3).map(p => (
+                      <div key={p.id} className="rf-feed-post">
+                        <div style={{fontWeight:600,fontSize:12,marginBottom:4,color:'#475569'}}>@ProthomBarta24 • {p.likes.toLocaleString()} ❤️ {p.shares.toLocaleString()} 🔄</div>
+                        {lang==='bn'?p.textBn:p.textEn}
+                      </div>
+                    ))}
+                  </div>
+                )}
+                <button onClick={nextStep} className="btn-primary" style={{width:'100%',justifyContent:'center',marginTop:8}}>
+                  {step<GAME_SCENARIOS.length-1?(lang==='bn'?'পরবর্তী পরিস্থিতি →':'Next Scenario →'):(lang==='bn'?'ডিব্রিফিং দেখুন →':'See Debrief →')}
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ===== UNESCO MIL PAGE =====
+function MILPage({ lang, completedUnits, completeUnit, addXP }) {
+  const [activeUnit, setActiveUnit] = useState(null);
+  const [milStep, setMilStep] = useState('content'); // content | quiz
+  const [qIdx, setQIdx] = useState(0);
+  const [selected, setSelected] = useState(null);
+  const [feedback, setFeedback] = useState(null);
+  const [correct, setCorrect] = useState(0);
+  const [quizDone, setQuizDone] = useState(false);
+
+  function openUnit(unit) {
+    setActiveUnit(unit);
+    setMilStep('content');
+    setQIdx(0); setSelected(null); setFeedback(null); setCorrect(0); setQuizDone(false);
+  }
+
+  function handleOption(i) {
+    if (selected!==null) return;
+    setSelected(i);
+    const ok = i===activeUnit.quiz[qIdx].correct;
+    if (ok) { setCorrect(c=>c+1); addXP(5, lang==='bn'?'সঠিক MIL উত্তর':'Correct MIL answer'); }
+    setFeedback({ok, text:activeUnit.quiz[qIdx].feedback});
+  }
+
+  function nextQ() {
+    if (qIdx<activeUnit.quiz.length-1) { setQIdx(q=>q+1); setSelected(null); setFeedback(null); }
+    else {
+      setQuizDone(true);
+      completeUnit(activeUnit.id);
+      if (typeof confetti==='function') confetti({particleCount:80,spread:60,origin:{y:0.6},colors:['#2563EB','#D97706']});
+    }
+  }
+
+  if (activeUnit) {
+    const isDone = completedUnits.includes(activeUnit.id);
+    return (
+      <div className="page">
+        <div className="module-header-strip">UNESCO MIL MODULE 4 — UNIT {activeUnit.id} / 5 {isDone?'✓ COMPLETED':''}</div>
+        <div className="module-wrap">
+          <button onClick={() => setActiveUnit(null)} style={{background:'none',border:'none',color:'var(--primary)',cursor:'pointer',fontSize:13,fontFamily:'Inter,sans-serif',fontWeight:500,marginBottom:16,display:'flex',alignItems:'center',gap:4}}>← {lang==='bn'?'সব ইউনিট':'All Units'}</button>
+
+          <div className="module-card card">
+            <div className="module-section-tag">UNIT {activeUnit.id} • {lang==='bn'?activeUnit.durationBn:activeUnit.durationEn} • +{activeUnit.xp} XP</div>
+            <h2 className="module-title">{lang==='bn'?activeUnit.titleBn:activeUnit.titleEn}</h2>
+            <div style={{display:'flex',gap:6,flexWrap:'wrap',marginBottom:20}}>
+              {(lang==='bn'?activeUnit.conceptsBn:activeUnit.conceptsEn).map((c,i) => (
+                <span key={i} style={{padding:'4px 10px',background:'var(--bg-alt)',color:'var(--mid)',borderRadius:4,fontSize:12,fontWeight:500,border:'1px solid var(--border)'}}>{c}</span>
+              ))}
+            </div>
+            {milStep==='content' && (
+              <div className="module-body">
+                {(lang==='bn'?activeUnit.contentBn:activeUnit.contentEn).map((p,i) => <p key={i}>{p}</p>)}
+                <div className="highlight-box">
+                  <div className="highlight-box-title">🔑 {lang==='bn'?'মূল ধারণাসমূহ':'Key Concepts'}</div>
+                  <ul className="checklist">
+                    {(lang==='bn'?activeUnit.conceptsBn:activeUnit.conceptsEn).map((c,i) => (
+                      <li key={i}><span className="check-icon">✓</span><span>{c}</span></li>
+                    ))}
+                  </ul>
+                </div>
+                <div style={{marginTop:24,textAlign:'center'}}>
+                  <button className="btn-primary" onClick={() => setMilStep('quiz')}>
+                    📝 {lang==='bn'?`কুইজ শুরু করুন (${activeUnit.quiz.length} প্রশ্ন)`:`Start Quiz (${activeUnit.quiz.length} questions)`} →
+                  </button>
+                </div>
+              </div>
+            )}
+            {milStep==='quiz' && !quizDone && (
+              <div>
+                <div className="quiz-q-num">{lang==='bn'?`প্রশ্ন ${qIdx+1}/${activeUnit.quiz.length}`:`Question ${qIdx+1}/${activeUnit.quiz.length}`}</div>
+                <div className="quiz-question">{lang==='bn'?activeUnit.quiz[qIdx].q:activeUnit.quiz[qIdx].qEn}</div>
+                <div className="quiz-options">
+                  {activeUnit.quiz[qIdx].options.map((opt,i) => (
+                    <button key={i} className={`quiz-option${selected===null?'':i===activeUnit.quiz[qIdx].correct?' correct':selected===i?' wrong':''}`}
+                      disabled={selected!==null} onClick={() => handleOption(i)}>{opt}</button>
+                  ))}
+                </div>
+                {feedback && (
+                  <div className={`quiz-feedback ${feedback.ok?'correct':'wrong'}`}>
+                    <span style={{fontWeight:600}}>{feedback.ok?'✓ ':'✗ '}</span>{feedback.text}
+                  </div>
+                )}
+                {selected!==null && (
+                  <button className="btn-primary" style={{marginTop:16,width:'100%',justifyContent:'center'}} onClick={nextQ}>
+                    {qIdx<activeUnit.quiz.length-1?(lang==='bn'?'পরবর্তী প্রশ্ন →':'Next Question →'):(lang==='bn'?'ফলাফল দেখুন →':'See Results →')}
+                  </button>
+                )}
+              </div>
+            )}
+            {quizDone && (
+              <div style={{textAlign:'center',padding:'32px 0'}}>
+                <div style={{fontSize:48,marginBottom:12}}>🎉</div>
+                <div style={{fontFamily:'Inter,sans-serif',fontSize:22,fontWeight:800,color:'var(--dark)',marginBottom:8,letterSpacing:'-0.01em'}}>
+                  {lang==='bn'?`ইউনিট ${activeUnit.id} সম্পন্ন!`:`Unit ${activeUnit.id} Complete!`}
+                </div>
+                <div style={{fontSize:15,color:'var(--mid)',marginBottom:20}}>{correct}/{activeUnit.quiz.length} {lang==='bn'?'সঠিক':'correct'} • +{activeUnit.xp} XP</div>
+                <button className="btn-outline" onClick={() => setActiveUnit(null)}>{lang==='bn'?'সব ইউনিটে ফিরুন':'Back to All Units'}</button>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="page">
+      <div className="module-header-strip">UNESCO MIL CURRICULUM — MODULE 4: MISINFORMATION, DISINFORMATION & HATE SPEECH</div>
+      <div className="module-wrap">
+        <div style={{marginBottom:24}}>
+          <div style={{fontSize:11,fontFamily:'Roboto Mono,monospace',color:'var(--primary)',letterSpacing:1,marginBottom:8,fontWeight:600}}>UNESCO • 2021 • CC-BY-SA 3.0 IGO</div>
+          <h2 style={{fontFamily:'Inter,sans-serif',fontSize:24,fontWeight:800,marginBottom:12,color:'var(--dark)',letterSpacing:'-0.02em'}}>{lang==='bn'?'মিডিয়া ও তথ্য সাক্ষরতা: মডিউল ৪':'Media & Information Literacy: Module 4'}</h2>
+          <p style={{fontSize:15,color:'var(--mid)',lineHeight:1.7}}>
+            {lang==='bn'
+              ?'সত্যের সন্ধান ও শান্তির প্রতিরক্ষায় মিথ্যা তথ্য, কুতথ্য ও ঘৃণ্য বক্তব্য মোকাবেলায় MIL দক্ষতা। ৫টি ইউনিট — ১১ ঘণ্টা শিক্ষাক্রম।'
+              :'MIL competencies to tackle misinformation, disinformation and hate speech in defense of truth-seeking and peace. 5 units — 11 hours of curriculum.'}
+          </p>
+          <div style={{marginTop:16,display:'flex',gap:8,flexWrap:'wrap'}}>
+            <span style={{padding:'4px 12px',background:'var(--bg-alt)',border:'1px solid var(--border)',color:'var(--mid)',borderRadius:16,fontSize:12,fontWeight:600}}>{completedUnits.length}/5 {lang==='bn'?'সম্পন্ন':'completed'}</span>
+            <span style={{padding:'4px 12px',background:'var(--primary-pale)',color:'var(--primary-mid)',border:'1px solid var(--primary-light)',borderRadius:16,fontSize:12,fontWeight:600}}>+{MIL_UNITS.reduce((a,u)=>a+u.xp,0)} XP {lang==='bn'?'সম্ভব':'available'}</span>
+          </div>
+        </div>
+        {MIL_UNITS.map(unit => {
+          const done = completedUnits.includes(unit.id);
+          return (
+            <div key={unit.id} className={`unit-card card${done?' completed':''}`} onClick={() => openUnit(unit)}>
+              <div style={{display:'flex',gap:16,alignItems:'flex-start'}}>
+                <div className="unit-icon">{unit.icon}</div>
+                <div style={{flex:1}}>
+                  <div className="unit-num">UNIT {unit.id} / 5 • {lang==='bn'?unit.durationBn:unit.durationEn}</div>
+                  <div className="unit-title">{lang==='bn'?unit.titleBn:unit.titleEn}</div>
+                  <div style={{display:'flex',gap:6,flexWrap:'wrap',margin:'8px 0'}}>
+                    {(lang==='bn'?unit.conceptsBn:unit.conceptsEn).slice(0,2).map((c,i) => (
+                      <span key={i} style={{padding:'2px 8px',background:'var(--bg-color)',border:'1px solid var(--border)',color:'var(--light)',borderRadius:4,fontSize:11}}>{c}</span>
+                    ))}
+                  </div>
+                  <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginTop:12}}>
+                    <span className={`unit-status ${done?'done':'todo'}`}>{done?`✓ ${lang==='bn'?'সম্পন্ন':'Completed'}`:`→ ${lang==='bn'?'শুরু করুন':'Start'} (+${unit.xp} XP)`}</span>
+                    <span style={{fontSize:11,fontFamily:'Roboto Mono,monospace',color:'var(--light)'}}>{unit.quiz.length} {lang==='bn'?'প্রশ্ন':'questions'}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ===== SHEEP PAGE =====
+function SHEEPPage({ lang, addXP }) {
+  const [stepIdx, setStepIdx] = useState(0);
+  const [answers, setAnswers] = useState({});
+  const [done, setDone] = useState(false);
+
+  function toggleAnswer(stepI, qI) {
+    const key = `${stepI}-${qI}`;
+    setAnswers(a => ({...a, [key]:!a[key]}));
+  }
+
+  function nextStep() {
+    if (stepIdx < SHEEP_STEPS.length-1) setStepIdx(s=>s+1);
+    else { setDone(true); addXP(15, lang==='bn'?'SHEEP যাচাই সম্পন্ন':'SHEEP verification done'); }
+  }
+
+  const step = SHEEP_STEPS[stepIdx];
+
+  if (done) return (
+    <div className="page">
+      <div style={{maxWidth:680,margin:'0 auto',padding:'24px 16px'}}>
+        <div className="card" style={{background:'#F0FDF4',borderColor:'#BBF7D0',textAlign:'center'}}>
+          <div style={{fontSize:40,marginBottom:12}}>✅</div>
+          <div style={{fontFamily:'Inter,sans-serif',fontSize:22,fontWeight:700,color:'#15803D',marginBottom:8,letterSpacing:'-0.01em'}}>
+            {lang==='bn'?'SHEEP যাচাই সম্পন্ন!':'SHEEP Verification Complete!'}
+          </div>
+          <p style={{fontSize:14,color:'var(--mid)',lineHeight:1.7,marginBottom:20}}>
+            {lang==='bn'
+              ?'আপনি সমস্ত ৫টি ধাপ সম্পন্ন করেছেন। এই চেকলিস্টটি First Draft-এর SHEEP Framework এবং Bellingcat OSINT পদ্ধতির উপর ভিত্তি করে তৈরি।'
+              :'You have completed all 5 steps. This checklist is based on First Draft\'s SHEEP Framework and Bellingcat\'s OSINT methodology.'}
+          </p>
+          <div style={{display:'grid',gridTemplateColumns:'repeat(5,1fr)',gap:8,marginBottom:24}}>
+            {SHEEP_STEPS.map(s => (
+              <div key={s.letter} style={{background:'white',borderRadius:6,padding:'10px 4px',textAlign:'center',border:`2px solid ${s.color}`}}>
+                <div style={{fontFamily:'Inter,sans-serif',fontSize:20,fontWeight:800,color:s.color}}>{s.letter}</div>
+                <div style={{fontSize:10,color:'var(--mid)',fontWeight:500,marginTop:4}}>{lang==='bn'?s.wordBn:s.wordEn}</div>
+              </div>
+            ))}
+          </div>
+          <button className="btn-outline" onClick={() => {setStepIdx(0);setAnswers({});setDone(false);}}>
+            🔄 {lang==='bn'?'নতুন যাচাই':'New Verification'}
+          </button>
+        </div>
+        <div className="module-card card" style={{marginTop:20}}>
+          <div className="module-section-tag">BELLINGCAT OSINT TOOLKIT</div>
+          <div className="module-title" style={{fontSize:18}}>{lang==='bn'?'উন্নত যাচাই সরঞ্জাম':'Advanced Verification Tools'}</div>
+          <div style={{display:'flex',flexDirection:'column',gap:12}}>
+            {[
+              {tool:'Google Reverse Image Search',url:'https://images.google.com',desc:lang==='bn'?'ছবির আসল উৎস ও তারিখ খুঁজুন':'Find original image source and date'},
+              {tool:'TinEye',url:'https://tineye.com',desc:lang==='bn'?'ছবির প্রথম প্রকাশনা তারিখ':'Find when an image was first published'},
+              {tool:'InVID/WeVerify',url:'https://weverify.eu/verification-plugin/',desc:lang==='bn'?'ভিডিও কীফ্রেম রিভার্স সার্চ':'Video keyframe reverse search'},
+              {tool:'Google Maps Street View',url:'https://maps.google.com',desc:lang==='bn'?'ভিডিও/ছবির অবস্থান যাচাই':'Verify location of videos/images'},
+              {tool:'Metadata2go',url:'https://www.metadata2go.com',desc:lang==='bn'?'ছবির মেটাডেটা (GPS, তারিখ) পড়ুন':'Read image metadata (GPS, date)'},
+            ].map((t,i) => (
+              <div key={i} style={{padding:'12px 16px',background:'var(--bg-color)',borderRadius:6,border:'1px solid var(--border)'}}>
+                <div style={{fontWeight:600,fontSize:14,color:'var(--dark)',marginBottom:4}}>{t.tool}</div>
+                <div style={{fontSize:13,color:'var(--mid)'}}>{t.desc}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="page">
+      <div className="game-header">
+        <div className="game-header-title">🐑 SHEEP {lang==='bn'?'যাচাই ফ্রেমওয়ার্ক':'Verification Framework'}</div>
+        <div className="game-header-sub">{lang==='bn'?'First Draft পদ্ধতি — দ্রুত তথ্য যাচাইয়ের চেকলিস্ট':'First Draft method — quick verification checklist'}</div>
+        <div className="game-progress-bar-wrap"><div className="game-progress-bar-fill" style={{width:`${((stepIdx)/SHEEP_STEPS.length)*100}%`}}/></div>
+        <div className="game-counter">{lang==='bn'?`ধাপ ${stepIdx+1}/${SHEEP_STEPS.length}:`:`Step ${stepIdx+1}/${SHEEP_STEPS.length}:`} {lang==='bn'?step.wordBn:step.wordEn}</div>
+      </div>
+      <div style={{maxWidth:680,margin:'0 auto',padding:'24px 16px'}}>
+        <div style={{display:'flex',gap:8,marginBottom:20,flexWrap:'wrap'}}>
+          {SHEEP_STEPS.map((s,i) => (
+            <div key={s.letter} style={{width:40,height:40,borderRadius:6,display:'flex',alignItems:'center',justifyContent:'center',fontFamily:'Inter,sans-serif',fontWeight:700,fontSize:16,background:i<=stepIdx?s.color:'var(--bg-alt)',color:i<=stepIdx?'white':'var(--light)',transition:'all 0.3s', border:i>stepIdx?'1px solid var(--border)':'none'}}>{s.letter}</div>
+          ))}
+        </div>
+        <div className={`sheep-step active card`} style={{borderColor:step.color}}>
+          <div style={{display:'flex',gap:16,marginBottom:16}}>
+            <div className="sheep-letter" style={{background:step.color+'15',color:step.color}}>{step.letter}</div>
+            <div>
+              <div style={{fontFamily:'Inter,sans-serif',fontWeight:700,fontSize:18,color:'var(--dark)'}}>{lang==='bn'?step.wordBn:step.wordEn}</div>
+              <div style={{fontSize:14,color:'var(--mid)',marginTop:2}}>{lang==='bn'?step.titleBn:step.titleEn}</div>
+            </div>
+          </div>
+          <div style={{fontSize:14,color:'var(--mid)',marginBottom:16,lineHeight:1.7,fontWeight:500}}>
+            {lang==='bn'?`প্রতিটি প্রশ্নের উত্তর ✓ দিয়ে চিহ্নিত করুন:`:`Check each question as you verify:`}
+          </div>
+          <div style={{display:'flex',flexDirection:'column',gap:8}}>
+            {(lang==='bn'?step.questionsBn:step.questionsEn).map((q,i) => {
+              const key = `${stepIdx}-${i}`;
+              return (
+                <div key={i} onClick={() => toggleAnswer(stepIdx,i)} style={{display:'flex',gap:12,alignItems:'flex-start',padding:'12px 14px',background:answers[key]?'#F0FDF4':'var(--bg-color)',borderRadius:6,cursor:'pointer',border:`1px solid ${answers[key]?'#22C55E':'var(--border)'}`,transition:'all 0.2s'}}>
+                  <div style={{width:20,height:20,borderRadius:4,border:`1.5px solid ${answers[key]?'#15803D':'var(--light)'}`,background:answers[key]?'#15803D':'white',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,fontSize:12,color:'white',marginTop:1}}>{answers[key]?'✓':''}</div>
+                  <span style={{fontSize:14,lineHeight:1.5,color:answers[key]?'#15803D':'var(--dark)'}}>{q}</span>
+                </div>
+              );
+            })}
+          </div>
+          <div style={{marginTop:20,padding:'12px 16px',background:step.color+'0A',borderRadius:6,borderLeft:`3px solid ${step.color}`}}>
+            <div style={{fontSize:12,fontWeight:700,color:step.color,marginBottom:6}}>💡 Tip</div>
+            <div style={{fontSize:13,color:'var(--mid)',lineHeight:1.6}}>{lang==='bn'?step.tipBn:step.tipEn}</div>
+          </div>
+        </div>
+        <button className="btn-primary" onClick={nextStep} style={{width:'100%',justifyContent:'center',marginTop:12}}>
+          {stepIdx<SHEEP_STEPS.length-1?(lang==='bn'?`পরবর্তী ধাপ: ${SHEEP_STEPS[stepIdx+1].wordBn} →`:`Next: ${SHEEP_STEPS[stepIdx+1].wordEn} →`):(lang==='bn'?'যাচাই সম্পন্ন করুন →':'Complete Verification →')}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ===== AI CHECKER PAGE =====
+function AICheckerPage({ lang, addXP }) {
+  const [claim, setClaim] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState(null);
+  const [error, setError] = useState('');
+
+  async function checkFact() {
+    if (!claim.trim()) return;
+    setLoading(true); setResult(null); setError('');
+
+    // Local keyword-based fact-checker (works without an API key or internet)
+    await new Promise(r => setTimeout(r, 1200)); // simulate processing delay
+    try {
+      const c = claim.toLowerCase();
+
+      // ── known FALSE claims ──
+      const falsePatterns = [
+        {k:['india','trade','block','ban','bangladesh','বাণিজ্য','ভারত','বন্ধ'],
+         summary:'No credible source confirms India has blocked trade with Bangladesh. FactWatch verified India-Bangladesh trade remains normal. The claim often circulates with misattributed images from older disputes.',
+         keyPoints:['India-Bangladesh bilateral trade was valued at over $14 billion in 2024','No official notification from either government about a trade ban','Images used in this claim have been traced to unrelated 2021 border incidents'],
+         advice:'Cross-check with FactWatch BD or Rumor Scanner before sharing trade or diplomatic claims.',
+         conflict:'high', sheep:'Source'},
+        {k:['papaya','dengue','cure','পেঁপে','ডেঙ্গু','নিরাময়','পাতা'],
+         summary:'WHO and DGHS Bangladesh confirm papaya leaf juice is not a scientifically proven cure for Dengue. Sharing this claim can delay proper medical care and is potentially dangerous.',
+         keyPoints:['No peer-reviewed clinical trial has validated papaya leaf as a Dengue cure','Overdosing on paracetamol (often combined) causes severe liver damage','DGHS recommends rest, hydration, and medical monitoring for Dengue'],
+         advice:'Always consult a registered physician for medical advice. Never delay hospital care based on social media remedies.',
+         conflict:'medium', sheep:'Evidence'},
+        {k:['emergency','জরুরি অবস্থা','ban','opposition','নিষিদ্ধ','সরকার'],
+         summary:'No emergency has been declared in Bangladesh per the President\'s Office and Ministry of Law. This type of claim spreads rapidly during political tension and is designed to cause fear.',
+         keyPoints:['Emergency declarations require gazette notification — none has been issued','Both the President\'s Office and Ministry of Law denied any ban','Unverified Facebook accounts are the primary source of this claim'],
+         advice:'Check official government portals (cabinet.gov.bd) before sharing political emergency claims.',
+         conflict:'high', sheep:'Source'},
+        {k:['ai','image','always','easy','সহজ','চেনা','ধরা'],
+         summary:'AI-generated images are increasingly difficult to detect. A BRAC 2026 study found 67% of Bangladeshi youth aged 18-25 cannot identify AI-generated images. The claim is misleading.',
+         keyPoints:['Modern AI (Midjourney, DALL-E 4, Stable Diffusion) produces near-photorealistic images','Even trained experts make mistakes without detection tools','Tools like Hive Moderation, AI or Not, and InVID help but are not 100% accurate'],
+         advice:'Use reverse image search and AI-detection tools rather than relying on visual judgment alone.',
+         conflict:'low', sheep:'Evidence'},
+        {k:['free','toll','padma','bridge','পদ্মা','সেতু','বিনামূল্যে','ফ্রি'],
+         summary:'Padma Bridge Authority has made no announcement about free toll passes. This appears to be a phishing scam designed to steal personal data.',
+         keyPoints:['The official Padma Bridge toll system has not changed','The linked website (.xyz domain) is not affiliated with the government','Clicking such links can expose your personal and financial data'],
+         advice:'Never click unverified links claiming government benefits. Check padmabridge.gov.bd directly.',
+         conflict:'low', sheep:'Source'},
+      ];
+
+      // ── known TRUE / REAL claims ──
+      const truePatterns = [
+        {k:['mit','2018','false','faster','6','six','মিথ্যা','দ্রুত','ছড়ায়'],
+         summary:'This is accurate. A 2018 MIT Media Lab study published in Science journal confirmed false information spreads approximately 6 times faster than true information on Twitter/X.',
+         keyPoints:['Study analysed 126,000 stories tweeted by 3 million people over 10 years','Falsehoods were 70% more likely to be retweeted than true stories','Human behaviour — not bots — was the primary driver of false-news spread'],
+         advice:'This is credible research. It can be safely shared to raise awareness about misinformation.',
+         conflict:'low', sheep:null},
+        {k:['bmd','cyclone','warning','signal','ঘূর্ণিঝড়','সতর্কতা','বিএমডি'],
+         summary:'Official Bangladesh Meteorological Department (BMD) alerts are verified through multiple government channels and are reliable emergency information.',
+         keyPoints:['BMD issues alerts via official website (bmd.gov.bd) and mobile apps','Signals are cross-broadcast by all licensed broadcast media','Coastal residents should always follow BMD instructions during cyclone season'],
+         advice:'Follow official BMD instructions. Share only the official alert, not unofficial reposts.',
+         conflict:'low', sheep:null},
+      ];
+
+      let verdict, summary, keyPoints, advice, conflictSensitivity, sheepFlag;
+
+      const matched = falsePatterns.find(p => p.k.filter(k => c.includes(k)).length >= 2);
+      const matchedTrue = truePatterns.find(p => p.k.filter(k => c.includes(k)).length >= 2);
+
+      // ── emotion/urgency indicators → Misleading ──
+      const emotionWords = ['share now','share immediately','শেয়ার করুন','এখনই','সতর্ক করুন','সবাইকে','!!','🚨','alert','breaking','exposed','ফাঁস','wake up','জেগে ওঠো'];
+      const hasEmotion = emotionWords.some(w => c.includes(w.toLowerCase()));
+
+      // ── conspiracy indicators ──
+      const conspiracyWords = ['government hiding','সরকার লুকাচ্ছে','secret','গোপন','they don\'t want','জানতে পারবে না','ngo','funded by','টাকা দেয়'];
+      const hasConspiracy = conspiracyWords.some(w => c.includes(w.toLowerCase()));
+
+      if (matched) {
+        verdict='False'; summary=matched.summary; keyPoints=matched.keyPoints;
+        advice=matched.advice; conflictSensitivity=matched.conflict; sheepFlag=matched.sheep;
+      } else if (matchedTrue) {
+        verdict='True'; summary=matchedTrue.summary; keyPoints=matchedTrue.keyPoints;
+        advice=matchedTrue.advice; conflictSensitivity=matchedTrue.conflict; sheepFlag=matchedTrue.sheep;
+      } else if (hasConspiracy) {
+        verdict='Misleading';
+        summary='This claim contains conspiracy framing — suggesting hidden actors or suppressed truths without citing verifiable sources. Conspiracy-framed claims are a common disinformation tactic identified in UNESCO MIL Module 4.';
+        keyPoints=['No named source or verifiable evidence is provided','The framing ("they are hiding it") is a classic SHEEP red flag under Source and Evidence','Cross-reference with IFCN-certified fact-checkers like FactWatch BD or Rumor Scanner'];
+        advice='Search for independent verification before sharing. Ask: who benefits from spreading this claim?';
+        conflictSensitivity='high'; sheepFlag='Source';
+      } else if (hasEmotion) {
+        verdict='Misleading';
+        summary='This claim uses high-emotion language designed to trigger immediate sharing. The SHEEP framework\'s "E" (Emotion) step warns that strong emotional triggers — urgency, fear, outrage — are deliberate tactics to bypass critical thinking.';
+        keyPoints=['Urgency ("share now", "warn everyone") is the #1 manipulation tactic in viral misinformation','Legitimate emergency alerts come from official channels, not forwarded messages','Pause for at least 3 seconds and check one independent source before sharing'];
+        advice='Pause. Verify. Then decide. Check FactWatch BD or Rumor Scanner before forwarding.';
+        conflictSensitivity='medium'; sheepFlag='Emotion';
+      } else {
+        verdict='Unverifiable';
+        summary='This specific claim could not be matched against known fact-checked content in this offline database. It may still be false, misleading, or true — independent verification is essential.';
+        keyPoints=['Use SHEEP framework: check Source, History, Evidence, Emotion, and Pictures/Video','Search FactWatch BD (factwatch.com.bd) or Rumor Scanner (rumorscanner.com) for verified information','Apply Lateral Reading: open multiple tabs and check what other sources say about the claim'];
+        advice='When in doubt, don\'t share. Consult IFCN-certified Bangladeshi fact-checkers for a definitive verdict.';
+        conflictSensitivity='medium'; sheepFlag='Evidence';
+      }
+
+      setResult({verdict, summary, keyPoints, advice, conflictSensitivity, sheepFlag});
+      addXP(10, lang==='bn'?'AI ফ্যাক্ট-চেক':'AI fact-check');
+    } catch(e) {
+      setError(lang==='bn'?'যাচাই করা সম্ভব হয়নি। আবার চেষ্টা করুন।':'Unable to verify. Please try again.');
+    }
+    setLoading(false);
+  }
+
+  const EXAMPLES = lang==='bn' ? [
+    'ভারত বাংলাদেশের সাথে সমস্ত বাণিজ্য বন্ধ করে দিয়েছে',
+    'AI-তৈরি ছবি সহজেই চেনা যায়',
+    'পেঁপের পাতার রস ডেঙ্গু নিরাময় করে',
+  ] : [
+    'India has completely blocked all trade with Bangladesh',
+    'AI-generated images are always easy to identify',
+    'Papaya leaf juice cures Dengue fever',
+  ];
+
+  const getVerdictClass = v => v==='True'?'verdict-true':v==='False'?'verdict-false':v==='Misleading'?'verdict-misleading':v==='Partially True'?'verdict-partial':'verdict-unknown';
+
+  return (
+    <div className="page">
+      <div className="game-header">
+        <div className="game-header-title">🤖 {lang==='bn'?'AI ফ্যাক্ট-চেকার':'AI Fact-Checker'}</div>
+        <div className="game-header-sub">{lang==='bn'?'Claude AI দিয়ে চালিত — IFCN নির্দেশিকা অনুযায়ী':'Powered by Claude AI — aligned with IFCN guidelines'}</div>
+      </div>
+      <div style={{maxWidth:680,margin:'0 auto',padding:'24px 16px'}}>
+        <div style={{background:'#FFFBEB',borderRadius:6,padding:'12px 16px',marginBottom:20,fontSize:13,color:'#B45309',border:'1px solid #FDE68A',lineHeight:1.6}}>
+          ⚠️ <span style={{fontWeight:600}}>{lang==='bn'?'লক্ষ্য করুন: ':'Notice: '}</span>{lang==='bn'?'AI বিশ্লেষণ একটি সহায়ক টুল — চূড়ান্ত যাচাইয়ের জন্য সর্বদা FactWatch ও Rumor Scanner ব্যবহার করুন।':'AI analysis is a guide tool — always use FactWatch & Rumor Scanner for definitive verification.'}
+        </div>
+        <textarea value={claim} onChange={e=>setClaim(e.target.value)}
+          placeholder={lang==='bn'?'একটি দাবি, সংবাদ শিরোনাম বা সোশ্যাল মিডিয়া পোস্ট পেস্ট করুন...':'Paste a claim, headline, or social media post to verify...'}
+          style={{width:'100%',minHeight:100,padding:16,borderRadius:6,border:'1px solid var(--border)',fontSize:15,lineHeight:1.6,resize:'vertical',fontFamily:'Inter, Hind Siliguri,sans-serif',color:'var(--dark)',background:'white',boxSizing:'border-box',boxShadow:'inset 0 1px 2px rgba(0,0,0,0.02)'}}/>
+        <div style={{display:'flex',gap:8,margin:'12px 0',flexWrap:'wrap'}}>
+          {EXAMPLES.map((e,i) => (
+            <button key={i} onClick={() => setClaim(e)} style={{padding:'6px 12px',background:'var(--bg-color)',border:'1px solid var(--border)',borderRadius:16,fontSize:12,cursor:'pointer',color:'var(--mid)',fontFamily:'Inter, Hind Siliguri,sans-serif',transition:'all 0.2s'}} onMouseOver={(e)=>{e.target.style.background='var(--primary-pale)';e.target.style.borderColor='var(--primary-light)';e.target.style.color='var(--primary-dark)'}} onMouseOut={(e)=>{e.target.style.background='var(--bg-color)';e.target.style.borderColor='var(--border)';e.target.style.color='var(--mid)'}}>{e}</button>
+          ))}
+        </div>
+        <button onClick={checkFact} disabled={loading||!claim.trim()} style={{padding:'12px 24px',background:claim.trim()&&!loading?'var(--primary)':'var(--bg-alt)',color:claim.trim()&&!loading?'white':'var(--light)',border:'1px solid transparent',borderColor:claim.trim()&&!loading?'transparent':'var(--border)',borderRadius:6,cursor:loading||!claim.trim()?'not-allowed':'pointer',fontWeight:600,fontSize:14,fontFamily:'Inter, Hind Siliguri,sans-serif',display:'flex',alignItems:'center',gap:8,marginTop:16,transition:'all 0.2s'}}>
+          {loading?<>⏳ {lang==='bn'?'বিশ্লেষণ হচ্ছে...':'Analysing...'}</>:<>🔍 {lang==='bn'?'যাচাই করুন':'Verify Claim'}</>}
+        </button>
+        {error && <div style={{marginTop:16,padding:'12px 16px',background:'#FEF2F2',borderRadius:6,color:'#B91C1C',fontSize:14,border:'1px solid #FECACA'}}>{error}</div>}
+        {result && (
+          <div className="ai-result card">
+            <div style={{marginBottom:16}}>
+              <span className={`verdict-pill ${getVerdictClass(result.verdict)}`}>
+                {result.verdict==='True'?'✅':result.verdict==='False'?'❌':result.verdict==='Misleading'?'⚠️':result.verdict==='Partially True'?'🔵':'❓'} {result.verdict}
+              </span>
+              {result.conflictSensitivity==='high' && <span style={{marginLeft:12,fontSize:12,color:'#DC2626',fontWeight:700}}>⚡ High conflict sensitivity</span>}
+              {result.sheepFlag && <span style={{marginLeft:12,padding:'4px 12px',background:'#FFFBEB',color:'#B45309',borderRadius:16,fontSize:12,fontWeight:600,border:'1px solid #FDE68A'}}>🐑 Check: {result.sheepFlag}</span>}
+            </div>
+            <p style={{fontSize:15,lineHeight:1.7,color:'var(--dark)',marginBottom:20}}>{result.summary}</p>
+            <div style={{marginBottom:20}}>
+              <div style={{fontSize:12,fontWeight:700,color:'var(--mid)',marginBottom:8,fontFamily:'Roboto Mono,monospace',letterSpacing:0.5}}>KEY POINTS</div>
+              {result.keyPoints.map((p,i) => <div key={i} style={{fontSize:14,color:'var(--dark)',padding:'8px 0',borderBottom:'1px solid var(--border)',display:'flex',gap:12,lineHeight:1.5}}><span style={{color:'var(--primary)',flexShrink:0,fontWeight:'bold'}}>→</span><span>{p}</span></div>)}
+            </div>
+            <div style={{background:'var(--bg-color)',borderRadius:6,padding:'16px',borderLeft:'3px solid var(--primary)'}}>
+              <div style={{fontSize:13,fontWeight:700,color:'var(--primary-dark)',marginBottom:6}}>💡 {lang==='bn'?'শেয়ারের পরামর্শ':'Sharing Advice'}</div>
+              <div style={{fontSize:14,color:'var(--mid)',lineHeight:1.6}}>{result.advice}</div>
+            </div>
+            <div style={{marginTop:20,fontSize:11,color:'var(--light)',fontFamily:'Roboto Mono,monospace',textAlign:'center'}}>
+              Powered by Claude AI • IFCN-aligned • ActionAid Bangladesh
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ===== MYTHS PAGE =====
+function MythsPage({ lang, addXP }) {
+  const [expanded, setExpanded] = useState(null);
+  const [seen, setSeen] = useState([]);
+
+  function toggle(id) {
+    setExpanded(e => e===id?null:id);
+    if (!seen.includes(id)) {
+      setSeen(s => [...s,id]);
+      addXP(5, lang==='bn'?'মিথ পড়লেন':'Read a myth');
+    }
+  }
+
+  return (
+    <div className="page">
+      <div className="section" style={{paddingBottom:24}}>
+        <div style={{maxWidth:680,margin:'0 auto'}}>
+          <div className="section-tag">{lang==='bn'?'মিথ বনাম সত্য':'MYTH VS FACT'}</div>
+          <h2 className="section-title">{lang==='bn'?'সাধারণ ভুল ধারণা':'Common Misconceptions'}</h2>
+          <p style={{fontSize:14,color:'var(--mid)',marginBottom:24}}>+5 XP {lang==='bn'?'প্রতিটি পড়লে':'per myth read'} • {seen.length}/{MYTHS.length} {lang==='bn'?'পড়েছেন':'read'}</p>
+          {MYTHS.map(m => (
+            <div key={m.id} className="myth-card">
+              <div className="myth-header" onClick={() => toggle(m.id)}>
+                <div style={{flex:1}}>
+                  <span className="myth-tag">{m.category}</span>
+                  <div className="myth-q">❌ {lang==='bn'?m.myth:m.mythEn}</div>
+                </div>
+                <div className={`myth-chevron${expanded===m.id?' open':''}`}>▾</div>
+              </div>
+              {expanded===m.id && (
+                <div className="myth-body">
+                  <div style={{fontSize:13,fontWeight:600,color:'#15803D',marginTop:12,marginBottom:6}}>✅ {lang==='bn'?'সত্যি হলো:':'The Fact:'}</div>
+                  <div className="myth-fact">{lang==='bn'?m.fact:m.factEn}</div>
+                  <div className="myth-source">📌 {m.source}</div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ===== QUIZ PAGE =====
+function QuizPage({ lang, addXP, earnBadge }) {
+  const [qIdx, setQIdx] = useState(0);
+  const [selected, setSelected] = useState(null);
+  const [feedback, setFeedback] = useState(null);
+  const [score, setScore] = useState(0);
+  const [done, setDone] = useState(false);
+
+  function handleOpt(i) {
+    if (selected!==null) return;
+    setSelected(i);
+    const ok = i===QUIZ[qIdx].correct;
+    if (ok) { setScore(s=>s+1); addXP(10, lang==='bn'?'কুইজ সঠিক':'Quiz correct'); }
+    setFeedback({ok,text:QUIZ[qIdx].feedback});
+  }
+  function nextQ() {
+    if (qIdx<QUIZ.length-1) { setQIdx(q=>q+1); setSelected(null); setFeedback(null); }
+    else { setDone(true); if(score+1>=4) earnBadge({id:'quiz',icon:'🧠',name:'Quiz Master'}); }
+  }
+  function restart() { setQIdx(0); setSelected(null); setFeedback(null); setScore(0); setDone(false); }
+
+  if (done) return (
+    <div className="page">
+      <div style={{maxWidth:680,margin:'0 auto',padding:'24px 16px'}}>
+        <div className="score-card card">
+          <div style={{fontSize:48,marginBottom:12}}>{score>=4?'🏆':score>=3?'⭐':'📚'}</div>
+          <div style={{fontSize:13,color:'var(--mid)',marginBottom:4,fontWeight:500}}>{lang==='bn'?'চূড়ান্ত স্কোর':'Final Score'}</div>
+          <div className="score-big">{score}/{QUIZ.length}</div>
+          <div style={{fontSize:16,fontWeight:600,color:'var(--dark)',marginTop:12,marginBottom:24}}>
+            {score>=4?(lang==='bn'?'চমৎকার! আপনি একজন MIL বিশেষজ্ঞ!':'Excellent! You\'re a MIL expert!'):
+             score>=3?(lang==='bn'?'ভালো! আরও একটু অনুশীলন করুন।':'Good! A bit more practice.'):
+             (lang==='bn'?'UNESCO MIL মডিউলগুলো দেখুন।':'Review the UNESCO MIL modules.')}
+          </div>
+          <button className="btn-outline" onClick={restart}>🔄 {lang==='bn'?'আবার করুন':'Try Again'}</button>
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="page">
+      <div className="game-header">
+        <div className="game-header-title">🧠 {lang==='bn'?'মিডিয়া সাক্ষরতা কুইজ':'Media Literacy Quiz'}</div>
+        <div className="game-header-sub">{lang==='bn'?'Stanford, IFCN, Cambridge ও SHEEP নিয়ে':'Stanford, IFCN, Cambridge & SHEEP'}</div>
+        <div className="game-progress-bar-wrap"><div className="game-progress-bar-fill" style={{width:`${((qIdx+(selected!==null?1:0))/QUIZ.length)*100}%`}}/></div>
+        <div className="game-counter">{qIdx+1}/{QUIZ.length} • {lang==='bn'?'স্কোর':'Score'}: {score} • +10 XP {lang==='bn'?'প্রতিটি সঠিক':'per correct'}</div>
+      </div>
+      <div className="game-body">
+        <div className="module-card card">
+          <div className="quiz-q-num">{lang==='bn'?`প্রশ্ন ${qIdx+1} / ${QUIZ.length}`:`Question ${qIdx+1} / ${QUIZ.length}`}</div>
+          <div className="quiz-question">{lang==='bn'?QUIZ[qIdx].q:QUIZ[qIdx].qEn}</div>
+          <div className="quiz-options">
+            {QUIZ[qIdx].options.map((o,i) => (
+              <button key={i} className={`quiz-option${selected===null?'':i===QUIZ[qIdx].correct?' correct':selected===i?' wrong':''}`}
+                disabled={selected!==null} onClick={() => handleOpt(i)}>{o}</button>
+            ))}
+          </div>
+          {feedback && <div className={`quiz-feedback ${feedback.ok?'correct':'wrong'}`}><span style={{fontWeight:600}}>{feedback.ok?'✓ ':'✗ '}</span>{feedback.text}</div>}
+          {selected!==null && (
+            <button className="btn-primary" style={{marginTop:16,width:'100%',justifyContent:'center'}} onClick={nextQ}>
+              {qIdx<QUIZ.length-1?(lang==='bn'?'পরবর্তী →':'Next →'):(lang==='bn'?'ফলাফল দেখুন →':'See Results →')}
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ===== CERTIFICATE PAGE =====
+function CertPage({ lang, xp, level, completedUnits, badges }) {
+  const [name, setName] = useState('');
+  const [nameInput, setNameInput] = useState('');
+  const [generated, setGenerated] = useState(false);
+  const today = new Date().toLocaleDateString(lang==='bn'?'bn-BD':'en-GB',{day:'numeric',month:'long',year:'numeric'});
+  const tier = completedUnits.length>=5?3:completedUnits.length>=3?2:completedUnits.length>=1?1:0;
+  const TIERS = [{},{title:lang==='bn'?'সত্যান্বেষক':'Truth Seeker',en:'Tier 1'},{title:lang==='bn'?'তথ্যযোদ্ধা':'Fact Fighter',en:'Tier 2'},{title:lang==='bn'?'সত্যরক্ষক':'Truth Defender',en:'Tier 3'}];
+
+  function generate() {
+    setName(nameInput.trim()||(lang==='bn'?'অংশগ্রহণকারী':'Participant'));
+    setGenerated(true);
+    if (typeof confetti==='function') confetti({particleCount:150,spread:80,origin:{y:0.6},colors:['#2563EB','#D97706','#F8FAFC']});
+  }
+
+  return (
+    <div className="page">
+      <div style={{maxWidth:680,margin:'0 auto',padding:'24px 16px'}}>
+        {!generated ? (
+          <div>
+            <div className="section-tag">{lang==='bn'?'সনদপত্র':'CERTIFICATE'}</div>
+            <h2 className="section-title">{lang==='bn'?'আপনার সনদ তৈরি করুন':'Generate Your Certificate'}</h2>
+            <div className="card" style={{marginBottom:20}}>
+              <p style={{fontSize:14,color:'var(--dark)',fontWeight:500,marginBottom:12}}>{lang==='bn'?'আপনার অগ্রগতি:':'Your Progress:'}</p>
+              <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:12,marginBottom:16}}>
+                {[{l:lang==='bn'?'মোট XP':'Total XP',v:`${xp}`},{l:lang==='bn'?'স্তর':'Level',v:lang==='bn'?level.title:level.titleEn},{l:lang==='bn'?'সম্পন্ন ইউনিট':'Units',v:`${completedUnits.length}/5`}].map((s,i) => (
+                  <div key={i} style={{background:'var(--bg-color)',border:'1px solid var(--border)',borderRadius:6,padding:'12px',textAlign:'center'}}>
+                    <div style={{fontFamily:'Inter,sans-serif',fontSize:18,fontWeight:700,color:'var(--primary-dark)'}}>{s.v}</div>
+                    <div style={{fontSize:11,color:'var(--mid)',textTransform:'uppercase',letterSpacing:0.5,marginTop:4}}>{s.l}</div>
+                  </div>
+                ))}
+              </div>
+              {tier===0 && <div style={{background:'#FFFBEB',borderRadius:6,padding:'12px 16px',fontSize:13,color:'#B45309',border:'1px solid #FDE68A'}}>{lang==='bn'?'অন্তত ১টি UNESCO MIL ইউনিট সম্পন্ন করে Tier 1 সনদ পান।':'Complete at least 1 UNESCO MIL Unit to earn a Tier 1 certificate.'}</div>}
+            </div>
+            {tier>0 && (
+              <div>
+                <input value={nameInput} onChange={e=>setNameInput(e.target.value)}
+                  placeholder={lang==='bn'?'আপনার নাম লিখুন...':'Enter your full name...'}
+                  style={{width:'100%',padding:'14px 16px',borderRadius:6,border:'1px solid var(--border)',fontSize:15,fontFamily:'Inter, Hind Siliguri,sans-serif',marginBottom:16,boxSizing:'border-box',boxShadow:'inset 0 1px 2px rgba(0,0,0,0.02)'}}/>
+                <button className="btn-primary" onClick={generate} style={{width:'100%',justifyContent:'center'}}>
+                  🏅 {lang==='bn'?'সনদ তৈরি করুন':'Generate Certificate'}
+                </button>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div>
+            <div className="cert">
+              <div className="cert-logo">🛡️</div>
+              <div className="cert-org">ACTIONAID BANGLADESH • EU-FUNDED PEACEBUILDING ACTION</div>
+              <div className="cert-title">সত্যান্বেষক | SHOTTANNESHOK</div>
+              <div className="cert-subtitle">{lang==='bn'?'মিডিয়া সাক্ষরতা সনদপত্র':'Media & Information Literacy Certificate'}</div>
+              <div style={{height:1,background:'var(--border)',margin:'20px 0'}}/>
+              <div style={{fontSize:13,color:'var(--mid)',marginBottom:8}}>{lang==='bn'?'এই সনদ প্রদান করা হচ্ছে':'This certifies that'}</div>
+              <div className="cert-name">{name}</div>
+              <div className="cert-desc" style={{maxWidth:500,margin:'0 auto 24px'}}>
+                {lang==='bn'
+                  ?`UNESCO MIL Module 4 পাঠ্যক্রম এবং #ThinkBeforeYouShare ডিজিটাল সাক্ষরতা উদ্যোগে সফলভাবে অংশগ্রহণ করেছেন। ${completedUnits.length}টি ইউনিট সম্পন্ন করে ${xp} XP অর্জন করেছেন।`
+                  :`Has successfully participated in the UNESCO MIL Module 4 curriculum and #ThinkBeforeYouShare digital literacy initiative. Completed ${completedUnits.length} unit(s) and earned ${xp} XP.`}
+              </div>
+              {tier>0 && <div style={{fontSize:18,fontWeight:700,color:'var(--primary-dark)',margin:'12px 0'}}>{TIERS[tier].title} — {TIERS[tier].en}</div>}
+              <div style={{fontSize:13,color:'var(--mid)',marginBottom:20}}>{today}</div>
+              {badges.length>0 && (
+                <div style={{display:'flex',justifyContent:'center',gap:8,flexWrap:'wrap',marginBottom:20}}>
+                  {badges.map((b,i) => <span key={i} style={{fontSize:20,background:'var(--bg-color)',border:'1px solid var(--border)',padding:'6px',borderRadius:'50%'}} title={b.name}>{b.icon}</span>)}
+                </div>
+              )}
+              <div className="cert-seal">✓ {lang==='bn'?'UNESCO MIL মডিউল ৪ পূর্ণ':'UNESCO MIL Module 4'}</div>
+            </div>
+            <div style={{textAlign:'center',marginTop:24,display:'flex',gap:12,justifyContent:'center',flexWrap:'wrap'}}>
+              <button className="btn-outline" onClick={() => {setGenerated(false);setNameInput('');setName('');}}>← {lang==='bn'?'ফিরুন':'Back'}</button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
