@@ -1,15 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import confetti from 'canvas-confetti';
 import { getLevel, getLevelPct } from './data/utils';
-import HomePage from './components/HomePage';
-import GamePage from './components/GamePage';
-import RumorFactoryPage from './components/RumorFactoryPage';
-import MILPage from './components/MILPage';
-import SHEEPPage from './components/SHEEPPage';
-import AICheckerPage from './components/AICheckerPage';
-import MythsPage from './components/MythsPage';
-import QuizPage from './components/QuizPage';
-import CertPage from './components/CertPage';
+
+// ⚡ Bolt: Lazy load route components to reduce initial bundle size and improve TTI
+const HomePage = lazy(() => import('./components/HomePage'));
+const GamePage = lazy(() => import('./components/GamePage'));
+const RumorFactoryPage = lazy(() => import('./components/RumorFactoryPage'));
+const MILPage = lazy(() => import('./components/MILPage'));
+const SHEEPPage = lazy(() => import('./components/SHEEPPage'));
+const AICheckerPage = lazy(() => import('./components/AICheckerPage'));
+const MythsPage = lazy(() => import('./components/MythsPage'));
+const QuizPage = lazy(() => import('./components/QuizPage'));
+const CertPage = lazy(() => import('./components/CertPage'));
 
 function App() {
   const [view, setView] = useState('home');
@@ -104,15 +106,23 @@ function App() {
       </div>
 
       <main className="main-content">
-        {view==='home' && <HomePage setView={setView} lang={lang} level={level} xp={xp} completedUnits={completedUnits}/>}
-        {view==='game' && <GamePage lang={lang} showToast={showToast} addXP={addXP} earnBadge={earnBadge}/>}
-        {view==='rumor' && <RumorFactoryPage lang={lang} addXP={addXP} earnBadge={earnBadge}/>}
-        {view==='mil' && <MILPage lang={lang} completedUnits={completedUnits} completeUnit={completeUnit} addXP={addXP}/>}
-        {view==='sheep' && <SHEEPPage lang={lang} addXP={addXP} setView={setView}/>}
-        {view==='ai' && <AICheckerPage lang={lang} addXP={addXP}/>}
-        {view==='myths' && <MythsPage lang={lang} addXP={addXP}/>}
-        {view==='quiz' && <QuizPage lang={lang} addXP={addXP} earnBadge={earnBadge}/>}
-        {view==='cert' && <CertPage lang={lang} xp={xp} level={level} completedUnits={completedUnits} badges={badges}/>}
+        <Suspense fallback={
+          <div className="section" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '50vh' }}>
+            <div style={{ fontSize: '1.2rem', color: 'var(--light)', fontWeight: 500 }}>
+              {lang === 'bn' ? 'লোড হচ্ছে...' : 'Loading...'}
+            </div>
+          </div>
+        }>
+          {view==='home' && <HomePage setView={setView} lang={lang} level={level} xp={xp} completedUnits={completedUnits}/>}
+          {view==='game' && <GamePage lang={lang} showToast={showToast} addXP={addXP} earnBadge={earnBadge}/>}
+          {view==='rumor' && <RumorFactoryPage lang={lang} addXP={addXP} earnBadge={earnBadge}/>}
+          {view==='mil' && <MILPage lang={lang} completedUnits={completedUnits} completeUnit={completeUnit} addXP={addXP}/>}
+          {view==='sheep' && <SHEEPPage lang={lang} addXP={addXP} setView={setView}/>}
+          {view==='ai' && <AICheckerPage lang={lang} addXP={addXP}/>}
+          {view==='myths' && <MythsPage lang={lang} addXP={addXP}/>}
+          {view==='quiz' && <QuizPage lang={lang} addXP={addXP} earnBadge={earnBadge}/>}
+          {view==='cert' && <CertPage lang={lang} xp={xp} level={level} completedUnits={completedUnits} badges={badges}/>}
+        </Suspense>
       </main>
 
       {toast && <div className="toast">{toast}</div>}
