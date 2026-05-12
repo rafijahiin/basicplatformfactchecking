@@ -3,9 +3,12 @@ import React, { useState } from 'react';
 function AICheckerPage({ lang, addXP }) {
   const [text, setText] = useState('');
   const [result, setResult] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const checkText = () => {
+  const checkText = async () => {
     if (!text.trim()) return;
+    setLoading(true);
+    setResult(null);
 
     let score = 0;
     const flags = [];
@@ -39,12 +42,63 @@ function AICheckerPage({ lang, addXP }) {
       flags.push(lang === 'bn' ? 'কোনো সুনির্দিষ্ট সূত্র বা লিঙ্ক নেই' : 'No specific source or link mentioned');
     }
 
-    let verdict = 'likely_real';
-    if (score > 60) verdict = 'highly_suspicious';
-    else if (score > 30) verdict = 'needs_verification';
+    // --- NEW: Automated Search Verification ---
+    let searchVerdict = null;
+    let logic = '';
+    let sources = [];
 
-    setResult({ score, flags, verdict });
-    addXP(10, lang === 'bn' ? 'AI বিশ্লেষণ সম্পন্ন' : 'AI Analysis complete');
+    try {
+      const response = await fetch('/api/verify-claim', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text })
+      });
+      const data = await response.json();
+
+      if (data.results && data.results.length > 0) {
+        sources = data.results;
+
+        const debunkKeywords = ['fake', 'rumor', 'hoax', 'misleading', 'debunked', 'ভুল', 'গুজব', 'অসত্য', 'বানোয়াট', 'মিথ্যা'];
+        const factCheckers = ['rumorscanner.com', 'factwatch.org', 'boomlive.in', 'afp.com', 'factcheck.org', 'snopes.com'];
+
+        let debunkCount = 0;
+        let factCheckerCount = 0;
+
+        data.results.forEach(res => {
+          const content = (res.title + ' ' + res.snippet).toLowerCase();
+          if (debunkKeywords.some(k => content.includes(k))) debunkCount++;
+          if (factCheckers.some(fc => res.link.toLowerCase().includes(fc))) factCheckerCount++;
+        });
+
+        if (debunkCount >= 2 || factCheckerCount >= 1) {
+          searchVerdict = 'highly_suspicious';
+          score += 50;
+          logic = lang === 'bn'
+            ? `অনলাইন অনুসন্ধানে একাধিক ফ্যাক্ট-চেকিং বা সতর্কতামূলক রিপোর্ট পাওয়া গেছে (${debunkCount}টি মিল)। এটি সম্ভবত একটি গুজব বা মিথ্যা তথ্য।`
+            : `Online search found multiple fact-checking or warning reports (${debunkCount} matches). This is likely a rumor or misinformation.`;
+        } else if (data.results.length > 3) {
+          searchVerdict = 'likely_real';
+          logic = lang === 'bn'
+            ? 'সার্চ রেজাল্ট অনুযায়ী তথ্যটি বিভিন্ন সংবাদমাধ্যমে দেখা যাচ্ছে এবং কোনো তাৎক্ষণিক খণ্ডন বা সতর্কবার্তা পাওয়া যায়নি।'
+            : 'According to search results, this information appears in various news outlets and no immediate debunks or warnings were found.';
+        } else {
+          searchVerdict = 'needs_verification';
+          logic = lang === 'bn'
+            ? 'পর্যাপ্ত তথ্য পাওয়া যায়নি। দাবিটি খুব নতুন হতে পারে অথবা এর সপক্ষে/বিপক্ষে স্পষ্ট প্রমাণ নেই।'
+            : 'Insufficient information found. The claim might be very new or there is no clear evidence for/against it.';
+        }
+      }
+    } catch (err) {
+      console.error('Verification failed', err);
+    }
+
+    let finalVerdict = 'likely_real';
+    if (score > 60 || searchVerdict === 'highly_suspicious') finalVerdict = 'highly_suspicious';
+    else if (score > 30 || searchVerdict === 'needs_verification') finalVerdict = 'needs_verification';
+
+    setResult({ score, flags, verdict: finalVerdict, logic, sources });
+    setLoading(false);
+    addXP(20, lang === 'bn' ? 'স্বয়ংক্রিয় সত্যতা যাচাই সম্পন্ন' : 'Automated Fact-Check complete');
   };
 
   return (
@@ -57,7 +111,7 @@ function AICheckerPage({ lang, addXP }) {
           : 'Paste any news text below. Our algorithm scans for patterns common in misinformation.'}
       </p>
 
-      <div className="card" style={{ padding: 32 }}>
+      <div className="card" style={{ padding: 32, position: 'relative' }}>
         <textarea
           className="font-bn"
           style={{
@@ -71,7 +125,8 @@ function AICheckerPage({ lang, addXP }) {
             background: 'var(--bg-color)',
             color: 'var(--text)',
             outline: 'none',
-            transition: 'border-color 0.2s'
+            transition: 'border-color 0.2s',
+            resize: 'vertical'
           }}
           onFocus={(e) => e.target.style.borderColor = 'var(--primary)'}
           onBlur={(e) => e.target.style.borderColor = 'var(--border)'}
@@ -79,15 +134,34 @@ function AICheckerPage({ lang, addXP }) {
           value={text}
           onChange={(e) => setText(e.target.value)}
         />
+        {text && !loading && (
+          <button
+            onClick={() => { setText(''); setResult(null); }}
+            style={{ position: 'absolute', top: 45, right: 45, background: 'var(--bg-alt)', border: 'none', borderRadius: '50%', width: 24, height: 24, cursor: 'pointer', color: 'var(--light)', fontSize: 12 }}
+          >
+            ✕
+          </button>
+        )}
         <button
           className="btn-primary"
-          style={{ width: '100%', padding: 16, fontSize: 16, borderRadius: 12 }}
+          style={{ width: '100%', padding: 16, fontSize: 16, borderRadius: 12, opacity: loading ? 0.7 : 1 }}
           onClick={checkText}
-          disabled={!text.trim()}
+          disabled={!text.trim() || loading}
         >
-          🔍 {lang === 'bn' ? 'বিশ্লেষণ শুরু করুন' : 'Start Analysis'}
+          {loading ? (
+            <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
+              <div className="spinner" style={{ width: 18, height: 18, border: '2px solid white', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }}></div>
+              {lang === 'bn' ? 'অনুসন্ধান ও যাচাই চলছে...' : 'Searching & Verifying...'}
+            </span>
+          ) : (
+            <span>🔍 {lang === 'bn' ? 'বিশ্লেষণ ও সত্যতা যাচাই করুন' : 'Analyze & Verify Facts'}</span>
+          )}
         </button>
       </div>
+
+      <style>{`
+        @keyframes spin { to { transform: rotate(360deg); } }
+      `}</style>
 
       {result && (
         <div className="ai-result card" style={{
@@ -105,19 +179,39 @@ function AICheckerPage({ lang, addXP }) {
             </div>
           </div>
 
-          <div style={{ background: 'var(--bg-alt)', padding: 20, borderRadius: 12, marginBottom: 24 }}>
-            <h4 style={{ fontSize: 14, textTransform: 'uppercase', color: 'var(--light)', marginBottom: 12, letterSpacing: 1 }}>
-              {lang === 'bn' ? 'চিহ্নিত রেড ফ্ল্যাগসমূহ:' : 'Detected Red Flags:'}
+          <div style={{ background: 'var(--primary-pale)', padding: 20, borderRadius: 12, marginBottom: 24, borderLeft: '4px solid var(--primary)' }}>
+            <h4 style={{ fontSize: 14, textTransform: 'uppercase', color: 'var(--primary)', marginBottom: 8, letterSpacing: 1 }}>
+              {lang === 'bn' ? 'যাচাইকরণের যুক্তি (Logic):' : 'Verification Logic:'}
             </h4>
-            {result.flags.length > 0 ? (
-              <ul style={{ paddingLeft: 20, color: 'var(--text)' }}>
-                {result.flags.map((f, i) => <li key={i} style={{ marginBottom: 10, fontSize: 15 }}>{f}</li>)}
-              </ul>
-            ) : (
-              <p style={{ color: 'var(--green)', fontWeight: 500 }}>
-                {lang === 'bn' ? 'কোনো নেতিবাচক প্যাটার্ন পাওয়া যায়নি।' : 'No negative patterns detected.'}
-              </p>
-            )}
+            <p style={{ fontSize: 16, lineHeight: 1.6 }}>{result.logic || (lang === 'bn' ? 'প্যাটার্ন ভিত্তিক বিশ্লেষণ সম্পন্ন।' : 'Pattern-based analysis completed.')}</p>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 24 }}>
+            <div style={{ background: 'var(--bg-alt)', padding: 20, borderRadius: 12 }}>
+              <h4 style={{ fontSize: 13, textTransform: 'uppercase', color: 'var(--light)', marginBottom: 12 }}>
+                {lang === 'bn' ? 'চিহ্নিত রেড ফ্ল্যাগসমূহ:' : 'Detected Red Flags:'}
+              </h4>
+              {result.flags.length > 0 ? (
+                <ul style={{ paddingLeft: 18, color: 'var(--text)', fontSize: 14 }}>
+                  {result.flags.map((f, i) => <li key={i} style={{ marginBottom: 6 }}>{f}</li>)}
+                </ul>
+              ) : (
+                <p style={{ color: 'var(--green)', fontSize: 14 }}>{lang === 'bn' ? 'কোনো প্যাটার্ন পাওয়া যায়নি' : 'No patterns detected'}</p>
+              )}
+            </div>
+
+            <div style={{ background: 'var(--bg-alt)', padding: 20, borderRadius: 12 }}>
+              <h4 style={{ fontSize: 13, textTransform: 'uppercase', color: 'var(--light)', marginBottom: 12 }}>
+                {lang === 'bn' ? 'শীর্ষ উৎসসমূহ (Sources):' : 'Top Sources:'}
+              </h4>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                {result.sources && result.sources.length > 0 ? result.sources.slice(0, 3).map((s, i) => (
+                  <a key={i} href={s.link.startsWith('http') ? s.link : `https://${s.link}`} target="_blank" rel="noreferrer" style={{ fontSize: 12, color: 'var(--primary)', textDecoration: 'none', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    🔗 {s.title}
+                  </a>
+                )) : <p style={{ fontSize: 13 }}>{lang === 'bn' ? 'কোনো উৎস পাওয়া যায়নি' : 'No sources found'}</p>}
+              </div>
+            </div>
           </div>
 
           <div style={{ fontSize: 13, color: 'var(--light)', display: 'flex', gap: 12, alignItems: 'flex-start' }}>
