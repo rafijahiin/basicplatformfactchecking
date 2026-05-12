@@ -68,13 +68,15 @@ function AICheckerPage({ lang, addXP }) {
         data.results.forEach(res => {
           const content = (res.title + ' ' + res.snippet).toLowerCase();
           const isDebunk = debunkKeywords.some(k => content.includes(k));
-          const isFC = factCheckers.some(fc => res.link.toLowerCase().includes(fc));
+          const isFC = factCheckers.some(fc => res.link.toLowerCase().includes(fc)) || res.trustScore >= 10;
 
-          if (isDebunk) debunkCount++;
+          if (isDebunk) debunkCount += (res.trustScore >= 10 ? 2 : 1);
           if (isFC) factCheckerCount++;
 
-          // Check if the query itself is in the title to ensure relevance
-          if (text.split(' ').some(word => word.length > 3 && content.includes(word.toLowerCase()))) {
+          // Use basic vector-like similarity (word overlap)
+          const queryWords = text.toLowerCase().split(/\s+/).filter(w => w.length > 3);
+          const overlap = queryWords.filter(w => content.includes(w)).length;
+          if (overlap / queryWords.length > 0.4) {
              relevantCount++;
           }
         });
@@ -225,12 +227,22 @@ function AICheckerPage({ lang, addXP }) {
 
             <div style={{ background: 'var(--bg-alt)', padding: 20, borderRadius: 12 }}>
               <h4 style={{ fontSize: 13, textTransform: 'uppercase', color: 'var(--light)', marginBottom: 12 }}>
-                {lang === 'bn' ? 'শীর্ষ উৎসসমূহ (Sources):' : 'Top Sources:'}
+                {lang === 'bn' ? 'শীর্ষ নির্ভরযোগ্য উৎসসমূহ:' : 'Top Trusted Sources:'}
               </h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                {result.sources && result.sources.length > 0 ? result.sources.slice(0, 3).map((s, i) => (
-                  <a key={i} href={s.link.startsWith('http') ? s.link : `https://${s.link}`} target="_blank" rel="noreferrer" style={{ fontSize: 12, color: 'var(--primary)', textDecoration: 'none', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    🔗 {s.title}
+                {result.sources && result.sources.length > 0 ? result.sources.slice(0, 4).map((s, i) => (
+                  <a key={i} href={s.link.startsWith('http') ? s.link : `https://${s.link}`} target="_blank" rel="noreferrer" style={{
+                    fontSize: 12,
+                    color: s.trustScore >= 10 ? 'var(--green)' : 'var(--primary)',
+                    textDecoration: 'none',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 6
+                  }}>
+                    {s.trustScore >= 10 ? '🛡️' : '🔗'} {s.title}
                   </a>
                 )) : <p style={{ fontSize: 13 }}>{lang === 'bn' ? 'কোনো উৎস পাওয়া যায়নি' : 'No sources found'}</p>}
               </div>
