@@ -16,10 +16,24 @@ function MythsPage({ lang }) {
       <div className="myths-list">
         {MYTHS.map(m => (
           <div key={m.id} className="myth-card">
-            <div
+            <button
+              type="button"
               className="myth-header"
               onClick={() => setOpen(open === m.id ? null : m.id)}
-              style={{ borderLeft: `4px solid ${open === m.id ? 'var(--green)' : 'var(--red)'}` }}
+              aria-expanded={open === m.id}
+              aria-controls={`myth-body-${m.id}`}
+              style={{
+                borderLeft: `4px solid ${open === m.id ? 'var(--green)' : 'var(--red)'}`,
+                width: '100%',
+                borderTop: 'none',
+                borderRight: 'none',
+                borderBottom: 'none',
+                textAlign: 'left',
+                font: 'inherit',
+                color: 'inherit',
+                background: 'none',
+                padding: '16px',
+              }}
             >
               <div style={{ flex: 1 }}>
                 <div className="myth-tag" style={{ background: 'var(--red-light)', color: 'var(--red)' }}>
@@ -29,11 +43,11 @@ function MythsPage({ lang }) {
                    ❌ {lang === 'bn' ? m.myth : m.mythEn}
                 </div>
               </div>
-              <div className={`myth-chevron ${open === m.id ? 'open' : ''}`}>▼</div>
-            </div>
+              <div className={`myth-chevron ${open === m.id ? 'open' : ''}`} aria-hidden="true">▼</div>
+            </button>
 
             {open === m.id && (
-              <div className="myth-body" style={{ animation: 'fadeIn 0.3s ease' }}>
+              <div id={`myth-body-${m.id}`} className="myth-body" style={{ animation: 'fadeIn 0.3s ease' }}>
                 <div className="myth-tag" style={{ background: 'var(--green-light)', color: 'var(--green)', marginTop: 12 }}>
                   {lang === 'bn' ? 'প্রকৃত সত্য' : 'THE FACT'}
                 </div>
