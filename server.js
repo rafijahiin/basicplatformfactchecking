@@ -16,7 +16,9 @@ app.post('/api/verify-claim', async (req, res) => {
   if (!text) return res.status(400).json({ error: 'No text provided' });
 
   try {
-    const searchUrl = `https://html.duckduckgo.com/html/?q=${encodeURIComponent(text)}`;
+    // We try to search specifically for rumors/fact-checks
+    const searchQuery = `${text} rumor fact check গুজব`;
+    const searchUrl = `https://html.duckduckgo.com/html/?q=${encodeURIComponent(searchQuery)}`;
     const response = await fetch(searchUrl, {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'

@@ -58,43 +58,54 @@ function AICheckerPage({ lang, addXP }) {
       if (data.results && data.results.length > 0) {
         sources = data.results;
 
-        const debunkKeywords = ['fake', 'rumor', 'hoax', 'misleading', 'debunked', 'ভুল', 'গুজব', 'অসত্য', 'বানোয়াট', 'মিথ্যা'];
-        const factCheckers = ['rumorscanner.com', 'factwatch.org', 'boomlive.in', 'afp.com', 'factcheck.org', 'snopes.com'];
+        const debunkKeywords = ['fake', 'rumor', 'hoax', 'misleading', 'debunked', 'fabricated', 'untrue', 'ভুল', 'গুজব', 'অসত্য', 'বানোয়াট', 'মিথ্যা', 'ভিত্তিহীন', 'অপপ্রচার', 'সতর্কবার্তা'];
+        const factCheckers = ['rumorscanner.com', 'factwatch.org', 'boomlive.in', 'afp.com', 'factcheck.org', 'snopes.com', 'check4spam.com', 'altnews.in'];
 
         let debunkCount = 0;
         let factCheckerCount = 0;
+        let relevantCount = 0;
 
         data.results.forEach(res => {
           const content = (res.title + ' ' + res.snippet).toLowerCase();
-          if (debunkKeywords.some(k => content.includes(k))) debunkCount++;
-          if (factCheckers.some(fc => res.link.toLowerCase().includes(fc))) factCheckerCount++;
+          const isDebunk = debunkKeywords.some(k => content.includes(k));
+          const isFC = factCheckers.some(fc => res.link.toLowerCase().includes(fc));
+
+          if (isDebunk) debunkCount++;
+          if (isFC) factCheckerCount++;
+
+          // Check if the query itself is in the title to ensure relevance
+          if (text.split(' ').some(word => word.length > 3 && content.includes(word.toLowerCase()))) {
+             relevantCount++;
+          }
         });
 
-        if (debunkCount >= 2 || factCheckerCount >= 1) {
+        if (debunkCount >= 1 || factCheckerCount >= 1) {
           searchVerdict = 'highly_suspicious';
-          score += 50;
+          score += 60;
           logic = lang === 'bn'
-            ? `অনলাইন অনুসন্ধানে একাধিক ফ্যাক্ট-চেকিং বা সতর্কতামূলক রিপোর্ট পাওয়া গেছে (${debunkCount}টি মিল)। এটি সম্ভবত একটি গুজব বা মিথ্যা তথ্য।`
-            : `Online search found multiple fact-checking or warning reports (${debunkCount} matches). This is likely a rumor or misinformation.`;
-        } else if (data.results.length > 3) {
-          searchVerdict = 'likely_real';
+            ? `অনলাইন অনুসন্ধানে ফ্যাক্ট-চেকিং রিপোর্ট বা সতর্কতামূলক প্যাটার্ন পাওয়া গেছে। এটি গুজব হওয়ার উচ্চ সম্ভাবনা রয়েছে।`
+            : `Online search found fact-check reports or warning patterns. There is a high probability this is a rumor.`;
+        } else if (relevantCount > 4) {
+          // If many relevant news sources mention it WITHOUT debunk keywords, it might be real
+          // but we still stay cautious
+          searchVerdict = 'needs_verification';
           logic = lang === 'bn'
-            ? 'সার্চ রেজাল্ট অনুযায়ী তথ্যটি বিভিন্ন সংবাদমাধ্যমে দেখা যাচ্ছে এবং কোনো তাৎক্ষণিক খণ্ডন বা সতর্কবার্তা পাওয়া যায়নি।'
-            : 'According to search results, this information appears in various news outlets and no immediate debunks or warnings were found.';
+            ? 'বিভিন্ন মাধ্যমে খবরটি দেখা যাচ্ছে, তবে কোনো সরাসরি ফ্যাক্ট-চেক পাওয়া যায়নি। অধিক নিশ্চিত হতে মূলধারার সংবাদমাধ্যম যাচাই করুন।'
+            : 'The news appears in various outlets, but no direct fact-check was found. Verify with mainstream news for certainty.';
         } else {
           searchVerdict = 'needs_verification';
           logic = lang === 'bn'
-            ? 'পর্যাপ্ত তথ্য পাওয়া যায়নি। দাবিটি খুব নতুন হতে পারে অথবা এর সপক্ষে/বিপক্ষে স্পষ্ট প্রমাণ নেই।'
-            : 'Insufficient information found. The claim might be very new or there is no clear evidence for/against it.';
+            ? 'এই বিষয়ে পর্যাপ্ত নিশ্চিত তথ্য বা কোনো ফ্যাক্ট-চেক পাওয়া যায়নি। তথ্যটি শেয়ার করার আগে সতর্ক থাকুন।'
+            : 'No sufficient verified information or fact-checks found. Exercise caution before sharing.';
         }
       }
     } catch (err) {
       console.error('Verification failed', err);
     }
 
-    let finalVerdict = 'likely_real';
-    if (score > 60 || searchVerdict === 'highly_suspicious') finalVerdict = 'highly_suspicious';
-    else if (score > 30 || searchVerdict === 'needs_verification') finalVerdict = 'needs_verification';
+    let finalVerdict = 'needs_verification';
+    if (score > 50 || searchVerdict === 'highly_suspicious') finalVerdict = 'highly_suspicious';
+    else if (score < 20 && searchVerdict === 'likely_real') finalVerdict = 'likely_real'; // We removed likely_real from searchVerdict for now
 
     setResult({ score, flags, verdict: finalVerdict, logic, sources });
     setLoading(false);
@@ -173,17 +184,29 @@ function AICheckerPage({ lang, addXP }) {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
             <h3 style={{ fontSize: 20 }}>{lang === 'bn' ? 'বিশ্লেষণ রিপোর্ট' : 'Analysis Report'}</h3>
             <div className={`verdict-pill ${result.verdict === 'highly_suspicious' ? 'verdict-false' : result.verdict === 'needs_verification' ? 'verdict-partial' : 'verdict-true'}`} style={{ margin: 0, padding: '8px 16px' }}>
-              {result.verdict === 'highly_suspicious' ? (lang === 'bn' ? '🚩 অত্যন্ত সন্দেহজনক' : '🚩 Highly Suspicious') :
-               result.verdict === 'needs_verification' ? (lang === 'bn' ? '⚠️ যাচাই প্রয়োজন' : '⚠️ Needs Verification') :
-               (lang === 'bn' ? '✅ সম্ভবত নির্ভরযোগ্য' : '✅ Likely Reliable')}
+        {result.verdict === 'highly_suspicious' ? (lang === 'bn' ? '🚩 অত্যন্ত সন্দেহজনক / গুজব' : '🚩 Highly Suspicious / Rumor') :
+               result.verdict === 'needs_verification' ? (lang === 'bn' ? '🔍 আরও যাচাই প্রয়োজন' : '🔍 Further Verification Needed') :
+               (lang === 'bn' ? '✅ নির্ভরযোগ্য উৎস পাওয়া গেছে' : '✅ Reliable Sources Found')}
             </div>
           </div>
 
-          <div style={{ background: 'var(--primary-pale)', padding: 20, borderRadius: 12, marginBottom: 24, borderLeft: '4px solid var(--primary)' }}>
-            <h4 style={{ fontSize: 14, textTransform: 'uppercase', color: 'var(--primary)', marginBottom: 8, letterSpacing: 1 }}>
-              {lang === 'bn' ? 'যাচাইকরণের যুক্তি (Logic):' : 'Verification Logic:'}
+          <div style={{
+            background: result.verdict === 'highly_suspicious' ? 'var(--red-light)' : 'var(--primary-pale)',
+            padding: 20,
+            borderRadius: 12,
+            marginBottom: 24,
+            borderLeft: `4px solid ${result.verdict === 'highly_suspicious' ? 'var(--red)' : 'var(--primary)'}`
+          }}>
+            <h4 style={{
+              fontSize: 14,
+              textTransform: 'uppercase',
+              color: result.verdict === 'highly_suspicious' ? 'var(--red)' : 'var(--primary)',
+              marginBottom: 8,
+              letterSpacing: 1
+            }}>
+              {lang === 'bn' ? 'যাচাইকরণের যুক্তি (Analysis Logic):' : 'Verification Logic:'}
             </h4>
-            <p style={{ fontSize: 16, lineHeight: 1.6 }}>{result.logic || (lang === 'bn' ? 'প্যাটার্ন ভিত্তিক বিশ্লেষণ সম্পন্ন।' : 'Pattern-based analysis completed.')}</p>
+            <p style={{ fontSize: 16, lineHeight: 1.6, fontWeight: 500 }}>{result.logic || (lang === 'bn' ? 'প্যাটার্ন ভিত্তিক বিশ্লেষণ সম্পন্ন।' : 'Pattern-based analysis completed.')}</p>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 24 }}>
