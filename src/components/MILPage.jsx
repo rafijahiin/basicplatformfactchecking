@@ -27,64 +27,73 @@ function MILPage({ lang, completedUnits, completeUnit }) {
     if (currentQ < activeUnit.quiz.length - 1) {
       setCurrentQ(c => c + 1);
     } else {
-      completeUnit(activeUnit.id);
+      completeUnit(activeUnit);
       setActiveUnit(null);
       setQuizMode(false);
     }
   }
 
   if (activeUnit) return (
-    <div className="section">
-      <button className="btn-secondary" onClick={() => { setActiveUnit(null); setQuizMode(false); }}>
-        {lang === 'bn' ? '← ফিরে যান' : '← Back'}
+    <div className="section" style={{ maxWidth: 800, margin: '0 auto' }}>
+      <button className="btn-outline" onClick={() => { setActiveUnit(null); setQuizMode(false); }} style={{ marginBottom: 24 }}>
+        {lang === 'bn' ? '← কারিকুলামে ফিরে যান' : '← Back to Curriculum'}
       </button>
 
       {!quizMode ? (
-        <div className="card" style={{ marginTop: 16 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
-            <span style={{ fontSize: '2.5rem' }}>{activeUnit.icon}</span>
-            <h2>{lang === 'bn' ? activeUnit.titleBn : activeUnit.titleEn}</h2>
+        <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+          <div style={{ background: 'var(--primary)', color: 'white', padding: '40px 30px', position: 'relative' }}>
+            <div style={{ fontSize: 64, opacity: 0.2, position: 'absolute', right: 20, top: 10 }}>{activeUnit.icon}</div>
+            <div className="unit-num" style={{ color: 'rgba(255,255,255,0.8)', marginBottom: 8 }}>UNIT {activeUnit.id}</div>
+            <h2 style={{ fontSize: 28, fontWeight: 800 }}>{lang === 'bn' ? activeUnit.titleBn : activeUnit.titleEn}</h2>
+            <div style={{ display: 'flex', gap: 16, marginTop: 16, fontSize: 13 }}>
+              <span>⏱️ {lang === 'bn' ? activeUnit.durationBn : activeUnit.durationEn}</span>
+              <span>⚡ {activeUnit.xp} XP</span>
+            </div>
           </div>
 
-          <div className="mil-content">
-            {(lang === 'bn' ? activeUnit.contentBn : activeUnit.contentEn).map((p, i) => (
-              <p key={i} style={{ marginBottom: 16, lineHeight: 1.6 }}>{p}</p>
-            ))}
-          </div>
+          <div style={{ padding: 30 }}>
+            <h3 style={{ marginBottom: 20, borderBottom: '2px solid var(--primary-pale)', paddingBottom: 10 }}>
+              {lang === 'bn' ? 'শিখন বিষয়বস্তু' : 'Learning Content'}
+            </h3>
 
-          <div style={{ background: 'var(--bg-alt)', padding: 20, borderRadius: 12, marginTop: 24 }}>
-            <h4>{lang === 'bn' ? 'মূল ধারণাগুলো:' : 'Key Concepts:'}</h4>
-            <ul style={{ marginLeft: 20, marginTop: 10 }}>
-              {(lang === 'bn' ? activeUnit.conceptsBn : activeUnit.conceptsEn).map((c, i) => (
-                <li key={i}>{c}</li>
+            <div className="mil-content" style={{ fontSize: 16, color: 'var(--text-dim)' }}>
+              {(lang === 'bn' ? activeUnit.contentBn : activeUnit.contentEn).map((p, i) => (
+                <p key={i} style={{ marginBottom: 20, lineHeight: 1.8 }}>{p}</p>
               ))}
-            </ul>
-          </div>
+            </div>
 
-          <button className="btn-primary" style={{ marginTop: 30, width: '100%' }} onClick={startQuiz}>
-            {lang === 'bn' ? 'কুইজ শুরু করুন' : 'Start Quiz'}
-          </button>
+            <div style={{ background: 'var(--bg-alt)', padding: 24, borderRadius: 12, marginTop: 32, border: '1px solid var(--border)' }}>
+              <h4 style={{ marginBottom: 12, color: 'var(--text)' }}>{lang === 'bn' ? 'মূল ধারণাগুলো:' : 'Key Concepts:'}</h4>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                {(lang === 'bn' ? activeUnit.conceptsBn : activeUnit.conceptsEn).map((c, i) => (
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14 }}>
+                    <span style={{ color: 'var(--primary)' }}>•</span> {c}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <button className="btn-primary" style={{ marginTop: 40, width: '100%', padding: 16, fontSize: 16 }} onClick={startQuiz}>
+              {lang === 'bn' ? 'কুইজ শুরু করুন' : 'Start Assessment'}
+            </button>
+          </div>
         </div>
       ) : (
-        <div className="card" style={{ marginTop: 16 }}>
-          <div style={{ marginBottom: 20, color: 'var(--text-dim)' }}>
-            {lang === 'bn' ? 'প্রশ্ন' : 'Question'} {currentQ + 1} / {activeUnit.quiz.length}
+        <div className="card" style={{ maxWidth: 600, margin: '0 auto', padding: 32 }}>
+          <div className="quiz-q-num">
+            {lang === 'bn' ? 'মূল্যায়ন প্রশ্ন' : 'Assessment Question'} {currentQ + 1} / {activeUnit.quiz.length}
           </div>
-          <h3 style={{ marginBottom: 24 }}>
+          <h3 className="quiz-question" style={{ fontSize: 20, marginBottom: 30 }}>
             {lang === 'bn' ? activeUnit.quiz[currentQ].q : activeUnit.quiz[currentQ].qEn}
           </h3>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <div className="quiz-options">
             {activeUnit.quiz[currentQ].options.map((opt, i) => (
               <button
                 key={i}
-                className="choice-btn"
+                className={`quiz-option ${feedback ? (i === activeUnit.quiz[currentQ].correct ? 'correct' : '') : ''}`}
                 disabled={feedback !== null}
                 onClick={() => handleAnswer(i)}
-                style={{
-                  textAlign: 'left',
-                  border: feedback && i === activeUnit.quiz[currentQ].correct ? '2px solid var(--green)' : '1px solid var(--border)'
-                }}
               >
                 {opt}
               </button>
@@ -92,16 +101,13 @@ function MILPage({ lang, completedUnits, completeUnit }) {
           </div>
 
           {feedback && (
-            <div style={{
-              marginTop: 24,
-              padding: 16,
-              borderRadius: 8,
-              background: feedback.type === 'success' ? '#D1FAE5' : '#FEE2E2',
-              color: feedback.type === 'success' ? '#065F46' : '#991B1B'
-            }}>
+            <div className={`quiz-feedback ${feedback.type === 'success' ? 'correct' : 'wrong'}`}>
+              <div style={{ fontWeight: 700, marginBottom: 8 }}>
+                {feedback.type === 'success' ? (lang === 'bn' ? '✅ চমৎকার!' : '✅ Excellent!') : (lang === 'bn' ? '❌ আবার চেষ্টা করুন' : '❌ Try Again')}
+              </div>
               <p>{feedback.text}</p>
-              <button className="btn-primary" style={{ marginTop: 16 }} onClick={next}>
-                {currentQ < activeUnit.quiz.length - 1 ? (lang === 'bn' ? 'পরবর্তী' : 'Next') : (lang === 'bn' ? 'শেষ করুন' : 'Finish')}
+              <button className="btn-primary" style={{ marginTop: 20, width: '100%' }} onClick={next}>
+                {currentQ < activeUnit.quiz.length - 1 ? (lang === 'bn' ? 'পরবর্তী প্রশ্ন' : 'Next Question') : (lang === 'bn' ? 'মডিউল শেষ করুন' : 'Finish Module')}
               </button>
             </div>
           )}
@@ -111,7 +117,18 @@ function MILPage({ lang, completedUnits, completeUnit }) {
   );
   return (
     <div className="section">
-      <h2 className="section-title">UNESCO MIL Curriculum</h2>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+        <h2 className="section-title" style={{ margin: 0 }}>UNESCO MIL Curriculum</h2>
+        <a
+          href="https://unesdoc.unesco.org/ark:/48223/pf0000389216"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn-outline"
+          style={{ textDecoration: 'none', fontSize: 14 }}
+        >
+          {lang === 'bn' ? '📥 ইউনেস্কো হ্যান্ডবুক ডাউনলোড করুন' : '📥 Download UNESCO Handbook'}
+        </a>
+      </div>
       <div style={{ display: 'grid', gap: 16 }}>
         {MIL_UNITS.map(u => (
           <div key={u.id} className="card" style={{ cursor: 'pointer', borderLeft: completedUnits.includes(u.id) ? '4px solid var(--green)' : '1px solid var(--border)' }} onClick={() => setActiveUnit(u)}>
