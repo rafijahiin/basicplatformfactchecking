@@ -104,57 +104,114 @@ export const GAME_SCENARIOS = [
    ]}
 ];
 export const MIL_UNITS = [
-  {id:1,icon:"💡",
-   titleBn:"ইউনিট ১: সত্যই গুরুত্বপূর্ণ",titleEn:"Unit 1: Truth Matters",
-   durationBn:"৩ ঘণ্টা",durationEn:"3 hours",xp:30,
-   conceptsBn:["সত্যের তত্ত্ব (প্রতিলিপি, সংযোগ ও সংগতি তত্ত্ব)","পোস্ট-ট্রুথ যুগ — সত্যের চেয়ে আবেগ বেশি","সাংবাদিকতায় সত্যের ভূমিকা","ঐতিহাসিক সংশোধনবাদ ও অস্বীকারবাদ"],
-   conceptsEn:["Theories of truth (correspondence, coherence, pragmatic)","Post-truth era — emotion over evidence","Truth as the essence of journalism and librarianship","Historical revisionism and denialism"],
+  {id:1,icon:"⚖️",
+   titleBn:"ইউনিট ১: নাগরিকতা, মিডিয়া এবং তথ্য সাক্ষরতা",titleEn:"Unit 1: Citizenship, Media and Information Literacy",
+   durationBn:"৩ ঘণ্টা",durationEn:"3 hours",xp:50,
+   conceptsBn:["MIL কী এবং কেন গুরুত্বপূর্ণ?","তথ্য প্রাপ্তির অধিকার","নাগরিক অংশগ্রহণ ও গণতন্ত্র","তথ্যের উৎস মূল্যায়ন"],
+   conceptsEn:["What is MIL and why does it matter?","Right to Information (RTI)","Civic participation and Democracy","Evaluating information sources"],
    contentBn:[
-     "সত্যের সন্ধান মানবজাতির চিরন্তন গল্প। Jonathan Swift (১৭শ শতক) বলেছিলেন: 'মিথ্যা উড়ে যায়, সত্য খুঁড়িয়ে আসে।' MIT Media Lab-এর ২০১৮ গবেষণা এটি প্রমাণ করে — Twitter-এ মিথ্যা তথ্য সত্যের চেয়ে ৬ গুণ দ্রুত ছড়ায়।",
-     "পোস্ট-ট্রুথ যুগে মানুষ প্রমাণের চেয়ে অনুভূতিকে বেশি গুরুত্ব দেয়। এটি কি সত্যিই নতুন? মানুষ সবসময় এমন তথ্য বিশ্বাস করতে চেয়েছে যা তাদের বিদ্যমান বিশ্বাসকে সমর্থন করে — এটিকে বলে confirmation bias।",
-     "সাংবাদিকতার মূল দায়িত্ব: তথ্য যাচাই করে সত্য প্রকাশ করা। 'যদি তথ্য মিথ্যা হয়, তবে সেটি সংবাদ নয়' — UNESCO। পেশাদার সংবাদমাধ্যম একাধিক সূত্র, উভয়পক্ষের বক্তব্য এবং তথ্য যাচাইয়ের মানদণ্ড মেনে চলে।"
+     "মিডিয়া এবং তথ্য সাক্ষরতা (MIL) হলো এমন একগুচ্ছ দক্ষতা যা আমাদের তথ্য খুঁজতে, মূল্যায়ন করতে এবং দায়িত্বশীলভাবে ব্যবহার করতে সাহায্য করে। এটি গণতন্ত্রের জন্য অপরিহার্য কারণ এটি নাগরিকদের সচেতন সিদ্ধান্ত নিতে সক্ষম করে।",
+     "ইউনেস্কোর মতে, MIL হলো মৌলিক মানবাধিকারের অংশ। এটি আপনাকে বুঝতে সাহায্য করে যে কেন কোনো নির্দিষ্ট তথ্য আপনার কাছে পৌঁছানো হচ্ছে এবং এর পেছনে কার কী স্বার্থ থাকতে পারে।",
+     "নাগরিক হিসেবে আমাদের শুধু তথ্য গ্রহণ করলে চলবে না, বরং তথ্যের সঠিকতা যাচাই করার সক্ষমতা অর্জন করতে হবে। তথ্যের উৎস কে? তাদের লক্ষ্য কী? তথ্যটি কি প্রমাণভিত্তিক? — এই প্রশ্নগুলো করাই MIL-এর মূল লক্ষ্য।"
    ],
    contentEn:[
-     "The search for truth is the story of mankind. Jonathan Swift wrote in the 17th century: 'Falsehood flies, and truth comes limping after it.' MIT Media Lab's 2018 study confirmed this — on Twitter, false information spreads 6x faster than truth in all categories.",
-     "In the post-truth era, people value emotion over evidence. Confirmation bias — the tendency to believe information that confirms our existing views — is not new, but digital platforms turbocharge it with algorithmic amplification.",
-     "The core responsibility of journalism is to verify facts and report truth. UNESCO discourages the term 'fake news' because if content is fake, it is not news. Professional journalism requires multiple sources, both-sides balance, and fact-verification standards."
+     "Media and Information Literacy (MIL) is a set of competencies that help people to maximize the advantages and minimize the harm in the new information landscapes. It is essential for democracy as it enables citizens to make informed decisions.",
+     "According to UNESCO, MIL is part of fundamental human rights. It helps you understand why specific information is reaching you and what interests might be behind it.",
+     "As citizens, we must not just consume information but develop the capacity to verify its accuracy. Who is the source? What is their goal? Is the information evidence-based? Asking these questions is the core goal of MIL."
    ],
    quiz:[
-     {q:"MIT (২০১৮) অনুযায়ী, মিথ্যা তথ্য সত্যের চেয়ে কত গুণ দ্রুত ছড়ায়?",qEn:"According to MIT (2018), how many times faster does false information spread than true information?",
-      options:["২ গুণ | 2x","৬ গুণ | 6x","১০ গুণ | 10x","সমান | Same speed"],correct:1,
-      feedback:"সঠিক। MIT ২০১৮ গবেষণা (Science জার্নাল): মিথ্যা তথ্য সত্যের চেয়ে ৬ গুণ দ্রুত এবং আরও গভীরে ছড়ায়। Correct. MIT 2018 (Science journal): False news spreads 6x faster and reaches far more people than true news."},
-     {q:"'পোস্ট-ট্রুথ' মানে কী?",qEn:"What does 'post-truth' mean?",
-      options:["সত্য মৃত | Truth is dead","আবেগ প্রমাণের চেয়ে বেশি প্রভাবশালী | Emotion more influential than evidence","মিথ্যা তথ্য নতুন | Misinformation is new","সামাজিক মাধ্যম মিথ্যা | Social media is false"],correct:1,
-      feedback:"পোস্ট-ট্রুথ মানে এমন একটি পরিবেশ যেখানে বস্তুনিষ্ঠ তথ্যের চেয়ে ব্যক্তিগত আবেগ ও বিশ্বাস জনমতকে বেশি প্রভাবিত করে। Post-truth describes a climate where appeals to emotion are more influential than facts."},
-     {q:"UNESCO কোন পরিভাষার বিরোধিতা করে?",qEn:"Which term does UNESCO discourage?",
-      options:["মিথ্যা তথ্য | Misinformation","কুতথ্য | Disinformation","ভুয়া খবর | Fake news","অপতথ্য | Mal-information"],correct:2,
-      feedback:"UNESCO 'fake news' পরিভাষা প্রত্যাখ্যান করে কারণ: যদি তথ্য মিথ্যা হয়, তাহলে সেটি সংবাদই নয়। এই শব্দটি বৈধ সাংবাদিকতা দমনেও ব্যবহৃত হতে পারে। UNESCO rejects 'fake news' because if content is fake, it is not news, and the term can be weaponized against legitimate journalism."}
+     {q:"MIL-এর মূল লক্ষ্য কী?",qEn:"What is the main goal of MIL?",
+      options:["শুধু ইন্টারনেট ব্যবহার শেখা | Only learning internet use","তথ্য মূল্যায়ন ও দায়িত্বশীল ব্যবহার | Evaluating and responsible use of info","বেশি করে সংবাদ পড়া | Reading more news","সোশ্যাল মিডিয়ায় ফলোয়ার বাড়ানো | Increasing social media followers"],correct:1,
+      feedback:"MIL আমাদের তথ্য মূল্যায়ন এবং তা দায়িত্বশীলভাবে ব্যবহার করতে শেখায়। MIL teaches us to evaluate info and use it responsibly."},
+     {q:"ইউনেস্কোর মতে MIL কিসের অংশ?",qEn:"According to UNESCO, MIL is part of what?",
+      options:["বিলাসিতা | Luxury","মৌলিক মানবাধিকার | Fundamental human rights","শুধু সাংবাদিকদের কাজ | Only for journalists","স্কুলের সিলেবাস | Only school syllabus"],correct:1,
+      feedback:"ইউনেস্কো MIL-কে মৌলিক মানবাধিকারের অংশ হিসেবে গণ্য করে। UNESCO considers MIL as part of fundamental human rights."}
    ]},
-  {id:2,icon:"🕸️",
-   titleBn:"ইউনিট ২: মিথ্যা তথ্যের বাস্তুতন্ত্র",titleEn:"Unit 2: The Misinformation Ecosystem",
-   durationBn:"২ ঘণ্টা",durationEn:"2 hours",xp:25,
-   conceptsBn:["মিথ্যা তথ্য, কুতথ্য ও অপতথ্যের পার্থক্য","৭টি সাধারণ বিভাগ (ভুল সংযোগ, মিথ্যা প্রেক্ষাপট...)","ষড়যন্ত্রতত্ত্ব ও মিথ্যা তথ্যের সম্পর্ক","ঘৃণ্য বক্তব্য ও মিথ্যা তথ্যের মিশ্রণ"],
-   conceptsEn:["Misinformation vs. Disinformation vs. Mal-information","7 common categories (misleading, impersonator, fabricated...)","Conspiracy theories and their relationship to false content","How hate speech and misinformation intersect"],
+  {id:2,icon:"📰",
+   titleBn:"ইউনিট ২: তথ্য ও সংবাদ বোঝা",titleEn:"Unit 2: Understanding Information and News",
+   durationBn:"২ ঘণ্টা",durationEn:"2 hours",xp:40,
+   conceptsBn:["সংবাদ কী? সংবাদের মানদণ্ড","সম্পাদকীয় স্বাধীনতা","পাবলিক সার্ভিস বনাম বাণিজ্যিক মিডিয়া","তথ্যের নৈতিক ব্যবহার"],
+   conceptsEn:["What is News? News criteria","Editorial independence","Public service vs. Commercial media","Ethical use of information"],
    contentBn:[
-     "তিনটি মূল ধরন: ১) মিথ্যা তথ্য (Misinformation) — অসত্য, কিন্তু ইচ্ছাকৃত ক্ষতির উদ্দেশ্য নেই। ২) কুতথ্য (Disinformation) — সচেতনভাবে মিথ্যা, ক্ষতির উদ্দেশ্যে প্রচারিত। ৩) অপতথ্য (Mal-information) — সত্য কিন্তু ক্ষতির উদ্দেশ্যে ব্যবহৃত।",
-     "সাতটি সাধারণ বিভাগ: ভুল সংযোগ (headline ≠ content), ভুল প্রেক্ষাপট (সত্য তথ্য ভুল সময়ে), বিভ্রান্তিকর বিষয়বস্তু, ছদ্মবেশী বিষয়বস্তু, মিথ্যা বিষয়বস্তু, কারসাজি করা বিষয়বস্তু, তৈরি করা বিষয়বস্তু।",
-     "ঘৃণ্য বক্তব্য (hate speech) সবসময় মিথ্যা নয়। কিন্তু বিদ্বেষ প্রায়ই মিথ্যা তথ্য দিয়ে 'সুপারচার্জড' হয়। উদাহরণ: একটি সত্যিকার দুর্ঘটনাকে সাম্প্রদায়িক উত্তেজনা তৈরিতে ব্যবহার।"
+     "সংবাদ হলো এমন তথ্য যা জনস্বার্থের সাথে যুক্ত এবং যা যাচাইযোগ্য। সব তথ্যই সংবাদ নয়। সংবাদের বিশেষ কিছু মানদণ্ড থাকে যেমন— সময়োপযোগিতা, প্রভাব, নৈকট্য এবং নতুনত্ব।",
+     "সম্পাদকীয় স্বাধীনতা মানে হলো সাংবাদিকরা কোনো রাজনৈতিক বা বাণিজ্যিক চাপ ছাড়াই সত্য প্রকাশ করতে পারেন। একটি স্বাস্থ্যকর গণতন্ত্রে স্বাধীন মিডিয়ার ভূমিকা অত্যন্ত গুরুত্বপূর্ণ।",
+     "বাণিজ্যিক মিডিয়া অনেক সময় মুনাফার জন্য চাঞ্চল্যকর খবর (clickbait) প্রচার করে। অন্যদিকে, পাবলিক সার্ভিস মিডিয়ার লক্ষ্য থাকে জনগণকে সঠিক তথ্য দিয়ে শিক্ষিত করা।"
    ],
    contentEn:[
-     "Three core types: 1) Misinformation — false, but not intended to harm. 2) Disinformation — deliberately false, created to harm. 3) Mal-information — true information used to cause harm. Understanding the difference matters because they require different responses.",
-     "Seven categories: false connection (headline ≠ content), false context (real content, wrong context), misleading content, impersonator content, fabricated content, manipulated content, satire/parody. Bangladesh context: most viral content is 'false context' — real images from 2021 reused for 2026 events.",
-     "Hate speech and misinformation are distinct but intersect. Anti-vaccination falsehoods rarely include direct hatred, but ethnic and religious tensions are often supercharged with false information. Rohingya-related disinformation in Bangladesh/Myanmar is a critical example."
+     "News is information that is in the public interest and is verifiable. Not all information is news. News has specific criteria such as timeliness, impact, proximity, and novelty.",
+     "Editorial independence means journalists can publish the truth without political or commercial pressure. In a healthy democracy, the role of independent media is crucial.",
+     "Commercial media often spreads sensational news (clickbait) for profit. On the other hand, public service media aims to educate the public with accurate information."
    ],
    quiz:[
-     {q:"'কুতথ্য' (Disinformation)-এর বিশেষত্ব কী?",qEn:"What distinguishes 'Disinformation' specifically?",
-      options:["যেকোনো মিথ্যা তথ্য | Any false information","ইচ্ছাকৃতভাবে ক্ষতির উদ্দেশ্যে তৈরি | Deliberately created to cause harm","শুধু সোশ্যাল মিডিয়ায় | Only on social media","ফটোশপ করা ছবি | Photoshopped images"],correct:1,
-      feedback:"কুতথ্যের মূল বৈশিষ্ট্য হলো ইচ্ছাকৃততা — কেউ জেনে-বুঝে মিথ্যা তথ্য প্রচার করছে ক্ষতির উদ্দেশ্যে। Disinformation requires intent to harm — someone knowingly creates and spreads false information."},
-     {q:"'ভুল সংযোগ' (False Connection) কী?",qEn:"What is 'False Connection'?",
-      options:["দুটি ভুল ঘটনা | Two false events","শিরোনাম ও মূল বিষয়বস্তু মেলে না | Headline doesn't match the article content","মিথ্যা সূত্র | False sources","ভুল তারিখ | Wrong date"],correct:1,
-      feedback:"সবচেয়ে সাধারণ ক্লিকবেইট কৌশল: চমকপ্রদ শিরোনাম, কিন্তু আর্টিকেলের ভেতরে ভিন্ন বা বিপরীত তথ্য। False Connection is the clickbait tactic: sensational headline that doesn't match the actual article content."},
-     {q:"ঘৃণ্য বক্তব্য (hate speech) সম্পর্কে কোন কথাটি সত্য?",qEn:"Which is true about hate speech?",
-      options:["সবসময় মিথ্যা | Always false","সবসময় সত্য | Always true","মিথ্যা তথ্য থেকে আলাদা কিন্তু প্রায়ই একসাথে চলে | Distinct from misinformation but often combined","শুধু অনলাইনে | Only online"],correct:2,
-      feedback:"ঘৃণ্য বক্তব্য সত্য বা মিথ্যা উভয়ই হতে পারে, কিন্তু বিদ্বেষ প্রায়ই মিথ্যা দিয়ে 'সুপারচার্জড' হয়। Hate speech can be true or false, but hostility is often amplified with false information."}
+     {q:"সংবাদের একটি অন্যতম মানদণ্ড কী?",qEn:"What is a key criterion of news?",
+      options:["ব্যক্তিগত মতামত | Personal opinion","যাচাইযোগ্যতা | Verifiability","অতিরঞ্জন | Exaggeration","গোপনীয়তা | Secrecy"],correct:1,
+      feedback:"সংবাদ অবশ্যই যাচাইযোগ্য হতে হবে। News must be verifiable."},
+     {q:"'Clickbait'-এর প্রধান লক্ষ্য কী?",qEn:"What is the main goal of 'Clickbait'?",
+      options:["সঠিক তথ্য দেওয়া | Providing accurate info","বেশি ক্লিক ও মুনাফা অর্জন | Getting more clicks and profit","জনসেবা | Public service","শিক্ষা বিস্তার | Spreading education"],correct:1,
+      feedback:"ক্লিকবেইট মূলত চাঞ্চল্য তৈরি করে বেশি ক্লিক ও মুনাফা পাওয়ার জন্য ব্যবহৃত হয়। Clickbait is used to generate sensations for more clicks and profit."}
+   ]},
+  {id:3,icon:"👥",
+   titleBn:"ইউনিট ৩: প্রতিনিধিত্ব ও বৈচিত্র্য",titleEn:"Unit 3: Representation and Diversity",
+   durationBn:"২ ঘণ্টা",durationEn:"2 hours",xp:40,
+   conceptsBn:["স্টিরিওটাইপ বা বদ্ধমূল ধারণা","মিডিয়ায় নারী ও সংখ্যালঘুর প্রতিনিধিত্ব","সাংস্কৃতিক বৈচিত্র্য সুরক্ষা","অ্যালগরিদমিক বায়াস"],
+   conceptsEn:["Stereotypes and fixed ideas","Representation of women and minorities","Protecting cultural diversity","Algorithmic bias"],
+   contentBn:[
+     "মিডিয়া আমাদের চারপাশের বিশ্বকে যেভাবে উপস্থাপন করে, তা আমাদের চিন্তাধারাকে প্রভাবিত করে। অনেক সময় নির্দিষ্ট গোষ্ঠী সম্পর্কে ভুল বা একপাক্ষিক ধারণা (stereotype) প্রচার করা হয়।",
+     "বৈচিত্র্যময় মিডিয়া মানে হলো যেখানে সব ধর্ম, বর্ণ, লিঙ্গ এবং মতাদর্শের মানুষের কণ্ঠস্বর প্রতিফলিত হয়। এটি সমাজে সহনশীলতা বাড়াতে সাহায্য করে।",
+     "বর্তমানে সোশ্যাল মিডিয়ার অ্যালগরিদম আমাদের এমন তথ্যই দেখায় যা আমরা পছন্দ করি। একে 'Echo Chamber' বলা হয়, যা আমাদের সংকীর্ণমনা করে তুলতে পারে।"
+   ],
+   contentEn:[
+     "How media represents the world around us influences our thinking. Often, false or one-sided ideas (stereotypes) about specific groups are promoted.",
+     "Diverse media means where voices of people of all religions, races, genders, and ideologies are reflected. It helps increase tolerance in society.",
+     "Currently, social media algorithms show us information we like. This is called an 'Echo Chamber', which can make us narrow-minded."
+   ],
+   quiz:[
+     {q:"'Echo Chamber' কী তৈরি করে?",qEn:"What does an 'Echo Chamber' create?",
+      options:["উন্মুক্ত চিন্তা | Open thinking","সংকীর্ণ চিন্তাধারা | Narrow-mindedness","সত্য সংবাদ | True news","বৈচিত্র্য | Diversity"],correct:1,
+      feedback:"ইকো চেম্বার আমাদের শুধু আমাদের পছন্দের তথ্য দেখায়, যা আমাদের চিন্তাধারাকে সংকীর্ণ করে। Echo chambers only show info we like, narrowing our perspective."}
+   ]},
+  {id:4,icon:"🔍",
+   titleBn:"ইউনিট ৪: যাচাইকরণ ও ফ্যাক্ট-চেকিং (মডিউল ৪ স্পেশাল)",titleEn:"Unit 4: Verification and Fact-Checking (Module 4 Special)",
+   durationBn:"৪ ঘণ্টা",durationEn:"4 hours",xp:100,
+   conceptsBn:["ফ্যাক্ট-চেকিং কেন জরুরি?","যাচাইকরণের ৫টি ধাপ","ডিজিটাল টুলস (Reverse Image Search)","ইনোকুলেশন থিওরি (Inoculation Theory)"],
+   conceptsEn:["Why is fact-checking essential?","5 steps of verification","Digital Tools (Reverse Image Search)","Inoculation Theory"],
+   contentBn:[
+     "ইউনেস্কোর মডিউল ৪ অনুযায়ী, যাচাইকরণ হলো সাংবাদিকতার প্রাণ। আজকের যুগে যেকোনো সাধারণ মানুষও তথ্যের প্রকাশক হতে পারে, তাই যাচাই করার দায়িত্ব আমাদের সবার।",
+     "যাচাইকরণের ৫টি ধাপ: ১. উৎস পরীক্ষা, ২. প্রমাণের তুলনা, ৩. প্রেক্ষাপট বিচার, ৪. উদ্দেশ্য খোঁজা, এবং ৫. প্রযুক্তি ব্যবহার।",
+     "ইনোকুলেশন থিওরি বা 'টিকা তত্ত্ব' অনুযায়ী, মানুষকে যদি আগে থেকেই মিথ্যা তথ্যের কৌশলগুলো সম্পর্কে জানানো হয়, তবে তারা ভবিষ্যতে মিথ্যা তথ্য থেকে নিজেদের রক্ষা করতে পারে।"
+   ],
+   contentEn:[
+     "According to UNESCO Module 4, verification is the heart of journalism. In today's age, any ordinary person can be a publisher of information, so the responsibility to verify lies with all of us.",
+     "5 steps of verification: 1. Check Source, 2. Compare Evidence, 3. Judge Context, 4. Find Motivation, and 5. Use Technology.",
+     "According to Inoculation Theory, if people are warned beforehand about manipulation tactics, they can protect themselves from misinformation in the future."
+   ],
+   quiz:[
+     {q:"ইনোকুলেশন থিওরি কীসের সাথে সম্পর্কিত?",qEn:"What is Inoculation Theory related to?",
+      options:["মেডিকেল ভ্যাকসিন | Medical vaccines","মিথ্যা তথ্য প্রতিরোধ | Preventing misinformation","কম্পিউটার ভাইরাস | Computer viruses","কৃষি উন্নয়ন | Agricultural development"],correct:1,
+      feedback:"ইনোকুলেশন থিওরি মানুষকে মিথ্যা তথ্যের বিরুদ্ধে 'মানসিক টিকা' দিতে সাহায্য করে। Inoculation Theory helps give people a 'mental vaccine' against misinformation."},
+     {q:"যাচাইকরণের প্রথম ধাপ কোনটি হওয়া উচিত?",qEn:"What should be the first step of verification?",
+      options:["শেয়ার করা | Sharing","উৎস পরীক্ষা | Checking Source","কমেন্ট করা | Commenting","ডিলিট করা | Deleting"],correct:1,
+      feedback:"যেকোনো তথ্যের উৎস পরীক্ষা করাই হলো যাচাইকরণের প্রথম ধাপ। Checking the source is the first step of verification."}
+   ]},
+  {id:5,icon:"🌐",
+   titleBn:"ইউনিট ৫: ইন্টারনেট, সোশ্যাল মিডিয়া ও সমালোচনামূলক চিন্তা",titleEn:"Unit 5: Internet, Social Media and Critical Thinking",
+   durationBn:"৩ ঘণ্টা",durationEn:"3 hours",xp:60,
+   conceptsBn:["ডিজিটাল পদচিহ্ন (Digital Footprint)","প্রাইভেসি ও নিরাপত্তা","অ্যালগরিদম কীভাবে কাজ করে?","সাইবার বুলিং প্রতিরোধ"],
+   conceptsEn:["Digital Footprint","Privacy and Security","How algorithms work?","Preventing Cyberbullying"],
+   contentBn:[
+     "ইন্টারনেটে আমরা যা করি তার একটি স্থায়ী রেকর্ড থেকে যায়, একেই ডিজিটাল পদচিহ্ন বলে। এটি আমাদের ভবিষ্যৎ ক্যারিয়ার এবং নিরাপত্তার ওপর প্রভাব ফেলে।",
+     "সোশ্যাল মিডিয়া প্ল্যাটফর্মগুলো আমাদের ডেটা ব্যবহার করে আমাদের প্রোফাইল তৈরি করে। এটি বুঝে আমাদের প্রাইভেসি সেটিংস নিয়ন্ত্রণ করা জরুরি।",
+     "সমালোচনামূলক চিন্তা (Critical Thinking) হলো কোনো তথ্য পাওয়ার পর সরাসরি বিশ্বাস না করে তার সত্যতা ও যৌক্তিকতা বিচার করা। এটিই ডিজিটাল যুগের সেরা সুরক্ষা।"
+   ],
+   contentEn:[
+     "Everything we do on the internet leaves a permanent record, called a digital footprint. This impacts our future careers and security.",
+     "Social media platforms use our data to build our profiles. It's important to understand this and control our privacy settings.",
+     "Critical Thinking means judging the truth and logic of information instead of believing it blindly. This is the best protection in the digital age."
+   ],
+   quiz:[
+     {q:"'Digital Footprint' কী?",qEn:"What is 'Digital Footprint'?",
+      options:["জুতার ছাপ | Footprint of shoes","ইন্টারনেটে আমাদের কাজের স্থায়ী রেকর্ড | Permanent record of our online activities","কম্পিউটারের পাসওয়ার্ড | Computer password","ভাইরাস | Virus"],correct:1,
+      feedback:"ডিজিটাল পদচিহ্ন হলো ইন্টারনেটে আমাদের ফেলে আসা সমস্ত তথ্যের রেকর্ড। Digital footprint is the record of all activities we leave online."}
    ]},
 ];
 export const MYTHS = [

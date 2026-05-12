@@ -47,11 +47,11 @@ function App() {
     setBadges(b => b.find(x => x.id === badge.id) ? b : [...b, badge]);
   }
 
-  function completeUnit(unitId) {
-    if (!completedUnits.includes(unitId)) {
-      setCompletedUnits(u => [...u, unitId]);
-      addXP(25, lang === 'bn' ? `ইউনিট ${unitId} সম্পন্ন` : `Unit ${unitId} completed`);
-      earnBadge({id:`unit${unitId}`,icon:'📚',name:`Unit ${unitId} Scholar`});
+  function completeUnit(unit) {
+    if (!completedUnits.includes(unit.id)) {
+      setCompletedUnits(u => [...u, unit.id]);
+      addXP(unit.xp, lang === 'bn' ? `ইউনিট ${unit.id} সম্পন্ন` : `Unit ${unit.id} completed`);
+      earnBadge({id:`unit${unit.id}`,icon:'📚',name:`Unit ${unit.id} Scholar`});
     }
   }
 
